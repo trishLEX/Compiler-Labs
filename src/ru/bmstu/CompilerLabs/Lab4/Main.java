@@ -1,0 +1,29 @@
+package ru.bmstu.CompilerLabs.Lab4;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
+public class Main {
+    private static final String PATH = "E:\\Sorry\\Documents\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\TestFile.txt";
+
+    public static void main(String[] args) throws CloneNotSupportedException, IOException{
+        String program = new String(Files.readAllBytes(Paths.get(PATH)));
+        Scanner scanner = new Scanner(program);
+
+        ArrayList<Token> tokens = new ArrayList<>();
+
+        Token t = scanner.nextToken();
+        do {
+            tokens.add(t);
+            t = scanner.nextToken();
+        } while (t.getTag() != DomainTag.END_OF_PROGRAM);
+
+        for (Token token: tokens)
+            System.out.println(token);
+
+        for (Message msg: scanner.getMessages())
+            System.out.println(msg);
+    }
+}
