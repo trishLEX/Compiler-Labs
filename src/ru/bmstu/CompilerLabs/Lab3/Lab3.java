@@ -1,4 +1,4 @@
-package ru.bmstu.Lab3;
+package ru.bmstu.CompilerLabs.Lab3;
 
 import java.io.File;
 import java.io.FileNotFoundException;
