@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Main {
-    private static final String PATH = "E:\\Sorry\\Documents\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab4\\TestFile.txt";
+    private static final String PATH = "C:\\Users\\alexe\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab4\\TestFile.txt";
 
     public static void main(String[] args) throws CloneNotSupportedException, IOException{
         String program = new String(Files.readAllBytes(Paths.get(PATH)));

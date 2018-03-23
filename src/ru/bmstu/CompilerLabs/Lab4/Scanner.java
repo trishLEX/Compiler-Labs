@@ -32,7 +32,7 @@ public class Scanner {
                 default:
                     if (Character.isDigit(cur.getChar())) {
                         return findNumber(cur);
-                    } else if (cur.getChar() == '_') {
+                    } else if (cur.getChar() == '_' || Character.isLetter(cur.getChar())) {
                         return findIdent(cur);
                     }
                     else
@@ -138,6 +138,11 @@ public class Scanner {
         while (cur.getChar() != '"') {
             if (cur.getChar() == (char) 0xFFFFFFFF) {
                 messages.add(new Message(true, (Position) cur.clone(), "\" expected"));
+                break;
+            }
+
+            if (cur.getChar() == '\n' || cur.getChar() == '\r') {
+                messages.add(new Message(true, (Position) cur.clone(), "string has new line"));
                 break;
             }
 
