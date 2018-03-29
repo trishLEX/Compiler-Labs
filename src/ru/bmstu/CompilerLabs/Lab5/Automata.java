@@ -90,7 +90,7 @@ public class Automata {
     }
 
     private Token getTokenNew(String word, Position start, Position follow, int state) throws CloneNotSupportedException {
-        //System.out.println(currentState + " " + state);
+        System.out.println(currentState + " " + state);
         if (state >= 1 && state < 6 || state == 7)
             return new IdentToken(word, start, follow);
         else if (state == 6)
@@ -169,7 +169,7 @@ public class Automata {
                 tokens.add(getTokenNew(word, start, (Position) cur.clone(), prevState));
                 word = "";
                 start = (Position) cur.clone();
-            } else if (currentState == 7 && prevState == 10) {
+            } else if ((currentState == 7 || currentState == 8) && prevState == 10) {
                 tokens.add(getTokenNew(word, start, (Position) cur.clone(), prevState));
                 word = "";
                 start = (Position) cur.clone();
