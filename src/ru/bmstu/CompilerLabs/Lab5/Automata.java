@@ -158,9 +158,8 @@ public class Automata {
 
     public void tokenizeNew() throws CloneNotSupportedException{
         String word = "";
-        Boolean isError = false;
         Position start = (Position) cur.clone();
-        int prevState = 0;
+        int prevState;
         for (; cur.getChar() != (char) 0xFFFFFFFF; cur.nextCp()) {
             char c = cur.getChar();
             prevState = currentState;
