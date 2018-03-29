@@ -1,1 +1,5 @@
-\
+\( goto \) asd \\123 \\123
+\\123123
+goto \( asd \) gosub
+asd\)
+123 goto abc \)\\a
