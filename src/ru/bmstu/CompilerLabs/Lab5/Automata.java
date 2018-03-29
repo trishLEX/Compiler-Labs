@@ -14,7 +14,7 @@ public class Automata {
             /*KEY_6 */    {7, 7, 7, 7, 7, 7, 7,   9, -1,  0, 7,       -1, 0},
             /*ID_7  */    {7, 7, 7, 7, 7, 7, 7,   9, -1,  0, 7,       -1, 0},
             /*NUM_8 */    {-1,-1,-1,-1,-1,-1,8,   9, -1,  0,-1,       -1, 0},
-            /*_9    */    {-1,-1,-1,-1,-1,-1,-1, 11, 10,  0,-1,       -1, 0},
+            /*_9    */    {-1,-1,-1,-1,-1,-1,-1, 11, 10, -1,-1,       -1, 0},
             /*OP_10 */    {1, 7, 7, 7, 7, 7, 8,   9, -1,  0, 7,       -1, 0},
             /*\\_11 */    {11,11,11,11,11,11,11, 11, 11, 11, 11,      -1, 0}
     };
@@ -68,7 +68,7 @@ public class Automata {
     }
 
     private int getNextState(char c) {
-        //System.out.println("c = " + c + " curState: " + currentState + " charCode: " + getCharCode(c) + " nextState: " + table[currentState][getCharCode(c)]);
+        System.out.println("c = " + c + " curState: " + currentState + " charCode: " + getCharCode(c) + " nextState: " + table[currentState][getCharCode(c)]);
         return table[currentState][getCharCode(c)];
     }
 
@@ -194,7 +194,9 @@ public class Automata {
 
         }
 
-        if (word != "")
+        if (word != "" && currentState != 9)
             tokens.add(getTokenNew(word, start, (Position) cur.clone(), currentState));
+        else
+            messages.add(new Message(true, (Position) start.clone(), "error"));
     }
 }
