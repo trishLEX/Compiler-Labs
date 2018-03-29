@@ -169,7 +169,9 @@ public class Automata {
                 tokens.add(getTokenNew(word, start, (Position) cur.clone(), prevState));
                 word = "";
                 start = (Position) cur.clone();
-            } else if ((currentState == 7 || currentState == 8) && prevState == 10) {
+            } else if ((currentState == 7 || currentState == 8 ||
+                    currentState == 1 || currentState == 2 || currentState == 3 || currentState == 4 || currentState == 5)
+                    && prevState == 10) {
                 tokens.add(getTokenNew(word, start, (Position) cur.clone(), prevState));
                 word = "";
                 start = (Position) cur.clone();
