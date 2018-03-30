@@ -10,6 +10,13 @@ public class Position implements Comparable<Position>, Cloneable{
         index = 0;
     }
 
+    public Position(String text, int line, int pos) {
+        this.text = text;
+        this.line = line;
+        this.pos = pos;
+        this.index = pos - 1;
+    }
+
     public int getLine() {
         return line;
     }

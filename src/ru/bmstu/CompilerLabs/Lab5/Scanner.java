@@ -13,7 +13,7 @@ public class Scanner {
     public static final String COMMENTS = "//.*\\n?";
     public static final String REGEX = KEYWORDS + "|" + NUMBERS + "|" + OPERATIONS + "|" + IDENTS + "|" + COMMENTS;
 
-    public static final String PATH = "E:\\Sorry\\Documents\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab5\\TestFile.txt";
+    public static final String PATH = "C:\\Users\\alexe\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab5\\TestFile.txt";
 
     public static void main(String[] args) throws IOException, CloneNotSupportedException{
         Pattern p = Pattern.compile(REGEX);

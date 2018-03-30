@@ -107,57 +107,9 @@ public class Automata {
             throw new RuntimeException("Trying to return empty token");
     }
 
-    public void tokenize() throws CloneNotSupportedException{
-        String word = "";
-        Boolean isError = false;
-        Position start = (Position) cur.clone();
-        for (; cur.getChar() != (char) 0xFFFFFFFF; cur.nextCp()) {
-            char c = cur.getChar();
-            int nextState = getNextState(c);
-
-            if (currentState == 11)
-                word += c;
-            else if (!Character.isWhitespace(c) && c != '\\')
-                word += c;
-
-            //если следующий символ новая строка, или пробел из индета или из ключевого слова
-            if (currentState > 0 && currentState != 9 && nextState == 0) {
-                tokens.add(getToken(word, start, (Position) cur.clone()));
-                word = "";
-                start = (Position) cur.clone();
-            //если после числа идёт комментраий или операция
-            } else if (currentState == 8 && (nextState == 10 || nextState == 11)) {
-                tokens.add(getToken(word, start, (Position) cur.clone()));
-                word = "";
-                start = (Position) cur.clone();
-            //если в идентификаторе или ключевом слове, а следующий это операция или комментарий
-            } else if ((currentState >= 1 && currentState <= 7) && (nextState == 10 || nextState == 11 || nextState == 9)) {
-                tokens.add(getToken(word, start, (Position) cur.clone()));
-                word = "";
-                start = (Position) cur.clone();
-            //если после операции идёт идент или ключевое слово
-            } else if (currentState == 10 && (nextState >= 1 && nextState <= 7 || nextState == 9)) {
-                tokens.add(getToken(word, start, (Position) cur.clone()));
-                word = "";
-                start = (Position) cur.clone();
-            } else if (nextState == -1) {
-                messages.add(new Message(true, (Position) start.clone(), "error"));
-                nextState = 0;
-                start = (Position) cur.clone();
-            }
-
-            if (start.getIndex() == cur.getIndex() && Character.isWhitespace(c))
-                start.nextCp();
-
-            currentState = nextState;
-        }
-
-        if (word != "")
-            tokens.add(getToken(word, start, (Position) cur.clone()));
-    }
-
     public void tokenizeNew() throws CloneNotSupportedException{
         String word = "";
+        boolean wasWS = false;
         Position start = (Position) cur.clone();
         int prevState;
         for (; cur.getChar() != (char) 0xFFFFFFFF; cur.nextCp()) {
@@ -166,17 +118,17 @@ public class Automata {
             currentState = getNextState(c);
 
             if (currentState == 0) {
-                tokens.add(getTokenNew(word, start, (Position) cur.clone(), prevState));
+                tokens.add(getTokenNew(word, start, new Position(word, start.getLine(), start.getPos() + word.length()), prevState));
                 word = "";
                 start = (Position) cur.clone();
             } else if ((currentState == 7 || currentState == 8 ||
                     currentState == 1 || currentState == 2 || currentState == 3 || currentState == 4 || currentState == 5)
                     && prevState == 10) {
-                tokens.add(getTokenNew(word, start, (Position) cur.clone(), prevState));
+                tokens.add(getTokenNew(word, start, new Position(word, start.getLine(), start.getPos() + word.length()), prevState));
                 word = "";
                 start = (Position) cur.clone();
             } else if (prevState != 0 && currentState == 9) {
-                tokens.add(getTokenNew(word, start, (Position) cur.clone(), prevState));
+                tokens.add(getTokenNew(word, start, new Position(word, start.getLine(), start.getPos() + word.length()), prevState));
                 word = "";
                 start = (Position) cur.clone();
             } else if (currentState == -1) {
@@ -185,8 +137,15 @@ public class Automata {
                 start = (Position) cur.clone();
             }
 
-            if (start.getIndex() == cur.getIndex() && Character.isWhitespace(c))
+//            if (start.getIndex() == cur.getIndex() && Character.isWhitespace(c))
+//                start.nextCp();
+
+            while (Character.isWhitespace(c) && currentState != 11) {
+                cur.nextCp();
+                c = cur.getChar();
+                currentState = getNextState(c);
                 start.nextCp();
+            }
 
             if (currentState != 11 && !Character.isWhitespace(c))
                 word += c;
