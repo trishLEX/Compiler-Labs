@@ -24,7 +24,7 @@ public class Scanner {
         automata.tokenizeNew();
 
         for (Token t: automata.getTokens())
-            //if (t.getTag() != DomainTag.WHITESPACE)
+            if (t.getTag() != DomainTag.WHITESPACE)
                 System.out.println(t);
 
         for (Message m: automata.getMessages())

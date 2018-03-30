@@ -1,4 +1,4 @@
-gosub    goto
+1111gosub    goto1  ( \ ) \()       gosub
 \)goto\) \\asd   \\asdas
 gosub \) @@ asd \(
 \\@@@@@@@@@@@@@@@@
