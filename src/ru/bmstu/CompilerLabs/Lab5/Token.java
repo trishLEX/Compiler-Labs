@@ -5,6 +5,7 @@ enum DomainTag {
     COMMENT,
     NUMBER,
     OPERATION,
+    WHITESPACE,
     KEYWORD
 }
 
@@ -17,6 +18,10 @@ abstract class Token {
         this.tag = tag;
         this.coords = new Fragment(start, follow);
         this.value = value;
+    }
+
+    public DomainTag getTag() {
+        return tag;
     }
 
     @Override
@@ -52,5 +57,11 @@ class CommentToken extends Token {
 class KeyWordToken extends Token {
     public KeyWordToken(String value, Position start, Position follow) {
         super(DomainTag.KEYWORD, start, follow, value);
+    }
+}
+
+class WhitespaceToken extends Token {
+    public WhitespaceToken(String value, Position start, Position follow) {
+        super(DomainTag.WHITESPACE, start, follow, value);
     }
 }
