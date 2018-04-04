@@ -5,10 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define TAG_EOF     0
 #define TAG_IDENT   1
 #define TAG_NUMBER  2
 #define TAG_KEYWORD 3
-#define TAG_ERROR   5
+#define TAG_ERROR   4
 
 char *tag_names[] = {
     "END_OF_PROGRAM", "IDENT", "NUMBER", "KEYWORD", "ERROR"
@@ -62,12 +63,27 @@ struct Position cur;
     yylloc->following = cur;            \
 }                                       \
 
-void init_scanner(char *program) {
-    continued = 0;
-    cur.line = 1;
-    cur.pos = 1;
-    cur.index = 0;
-    yy_scan_string(program);
+//void init_scanner(char *program) {
+//    continued = 0;
+//    cur.line = 1;
+//    cur.pos = 1;
+//    cur.index = 0;
+//    yy_scan_string(program);
+//}
+
+void init_scanner(FILE * program) {
+	char * buffer = 0;
+	long length;
+	fseek(program, 0, SEEK_END);
+	length = ftell(program);
+	fseek(program, 0, SEEK_SET);
+	buffer = malloc(length);
+	fread(buffer, 1, length, program);
+  continued = 0;
+  cur.line = 1;
+  cur.pos = 1;
+  cur.index = 0;
+  yy_scan_string(buffer);
 }
 
 void err(char *msg) {
@@ -102,7 +118,7 @@ KEYWORD mov|eax
                return TAG_NUMBER;
            }
 
-<<EOF>>    return 0;
+<<EOF>>    return TAG_EOF;
 
 .          {
 		err("Unexpected character");
@@ -112,15 +128,21 @@ KEYWORD mov|eax
 %%
 
 
-#define PROGRAM "123"
+#define PROGRAM "123 ident321 0123AAAh mov eax @@"
 
-int main()
+int main(int argc, char *argv[])
 {
     int tag;
     YYSTYPE value;
     YYLTYPE coords;
 
-    init_scanner(PROGRAM);
+    //FILE * f = fopen("/home/trishlex/program.txt", "rb");
+
+    FILE * f = fopen(argv[1], "rb");
+
+    //init_scanner(PROGRAM);
+
+    init_scanner(f);
 
     do {
         tag = yylex(&value, &coords);
