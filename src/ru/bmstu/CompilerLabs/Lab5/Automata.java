@@ -71,12 +71,6 @@ public class Automata {
     }
 
     private int getNextState(char c) {
-        //System.out.println("c = " + c + " state: " + state + " charCode: " + getCharCode(c) + " nextState: " + table[state][getCharCode(c)]);
-//        try {
-//            int res = table[state][getCharCode(c)];
-//        } catch (ArrayIndexOutOfBoundsException e) {
-//            return -1;
-//        }
         return table[currentState][getCharCode(c)];
     }
 
@@ -92,14 +86,11 @@ public class Automata {
             tokens.add(new OpToken(word, start, follow));
         else if (state == 11)
             tokens.add(new CommentToken(word, start, follow));
-//        else if (state == 9)
-//            tokens.add(new OpToken(word, start, follow));
         else if (state == 12)
             tokens.add(new WhitespaceToken(word, start, follow));
         else if (state == 13)
             messages.add(new Message(true, start, "error"));
         else
-            //throw new RuntimeException("Trying to return empty token");
             messages.add(new Message(true, start, "error"));
     }
 
@@ -110,65 +101,20 @@ public class Automata {
         for (; cur.getChar() != (char) 0xFFFFFFFF; cur.nextCp()) {
             char c = cur.getChar();
             prevState = currentState;
-//            if (prevState == -1) {
-//                word = "";
-//                currentState = 0;
-//                //continue;
-//            }
             currentState = getNextState(c);
 
             if (currentState == -1) {
                 addTokenNew(word, start, (Position) cur.clone(), prevState);
                 word = "";
                 start = (Position) cur.clone();
-                System.out.println("HERE1 cur: " + currentState + " prev " + prevState + " c: " + c);
-                prevState = 0;
                 currentState = 0;
-                System.out.println("HERE2 cur: " + currentState + " prev " + prevState + " c: " + c);
                 currentState = getNextState(c);
             }
 
             word += c;
-
-//            if (currentState == -1 && prevState == 11)
-//                currentState = 11;
-//
-//            if (currentState == 0) {
-//                System.out.println("cur " + currentState + " prev " + prevState);
-//                if (prevState != -1) {
-//                    tokens.add(getTokenNew(word, start, new Position(word, start.getLine(), start.getPos() + word.length()), prevState));
-//                    word = "";
-//                    start = (Position) cur.clone();
-//                } else {
-//                    messages.add(new Message(true, (Position) start.clone(), "error"));
-//                    currentState = 0;
-//                }
-//            } else if ((currentState == 7 || currentState == 8 ||
-//                    currentState == 1 || currentState == 2 || currentState == 3 || currentState == 4 || currentState == 5)
-//                    && prevState == 10) {
-//                tokens.add(getTokenNew(word, start, new Position(word, start.getLine(), start.getPos() + word.length()), prevState));
-//                word = "";
-//                start = (Position) cur.clone();
-//            } else if (prevState != 0 && currentState == 9) {
-//                tokens.add(getTokenNew(word, start, new Position(word, start.getLine(), start.getPos() + word.length()), prevState));
-//                word = "";
-//                start = (Position) cur.clone();
-//            } else if (currentState == -1) {
-//                messages.add(new Message(true, (Position) start.clone(), "error"));
-//                //currentState = 0;
-//                word = "";
-//                start = (Position) cur.clone();
-//            }
-//
-//            if (currentState != 11 && !Character.isWhitespace(c))
-//                word += c;
-//            else if (currentState == 11)
-//                word += c;
-//
         }
 
         prevState = currentState;
-        System.out.println("HERE3 cur: " + currentState + " prev " + prevState + " c: " + cur.getChar());
         currentState = getNextState(cur.getChar());
         System.out.println(currentState + " " + prevState);
         if (currentState == -1) {
