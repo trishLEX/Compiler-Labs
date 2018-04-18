@@ -33,7 +33,6 @@ public class Parser {
 
     private Stack<Symbol> input;
     private Scanner scanner;
-    private ArrayList<Error> errors;
     private Stack<Symbol> stack;
     private ArrayList<Symbol> result;
     private HashMap<SymbolType, Integer> varMap;
@@ -42,7 +41,6 @@ public class Parser {
     public Parser(String program) {
         this.input = new Stack<>();
         this.scanner = new Scanner(program);
-        this.errors = new ArrayList<>();
         this.stack = new Stack<>();
 
         this.varMap = new HashMap<>();
@@ -68,24 +66,16 @@ public class Parser {
         this.result = new ArrayList<>();
     }
 
-    public ArrayList<Error> getErrors() {
-        return errors;
-    }
-
-    private void reportError(String error) {
-        this.errors.add(new Error(error));
-    }
-
     private void parse() throws CloneNotSupportedException {
         Symbol X = stack.peek();
         if (tokenMap.containsKey(X.getTag())) {
             if (X.getTag() == input.peek().getTag()) {
                 stack.pop();
                 input.push(scanner.nextToken());
-            } else reportError("error");
+            } else throw new RuntimeException(X.getTag() + " expected, got " + input.peek());
         } else {
-            System.out.print(X);
-            System.out.println(" " + X.getTag() + " " + input.peek().getTag() + " " + varMap.get(X.getTag()) + " " + tokenMap.get(input.peek().getTag()));
+            //System.out.print(X);
+            //System.out.println(" " + X.getTag() + " " + input.peek().getTag() + " " + varMap.get(X.getTag()) + " " + tokenMap.get(input.peek().getTag()));
             if (table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())][0] != -1) {
                 stack.pop();
                 ArrayList<Symbol> symbols = new ArrayList<>();
@@ -99,24 +89,21 @@ public class Parser {
                     if (symbols.get(i).getTag() != VarTag.EPSILON)
                         stack.push(symbols.get(i));
                 }
-            } else reportError("error");
+            } else
+                throw new RuntimeException(X.getTag() + " expected, got " + input.peek());
         }
     }
 
     public ArrayList<Symbol> TopDownParse() throws CloneNotSupportedException {
-        ////input.push(tokens.pop());
         stack.push(new SVar());
         input.push(scanner.nextToken());
 
         do {
             parse();
-        } while (!stack.isEmpty() && input.peek().getTag() != TokenTag.END_OF_PROGRAM);
-        //Без второго условия при неправильной программе уходит в вечный цикл
-
-        parse();
+        } while (!stack.isEmpty());
 
         if (!stack.isEmpty())
-            reportError("Stack is not empty");
+            System.out.println("stack is not empty");
 
         return result;
     }

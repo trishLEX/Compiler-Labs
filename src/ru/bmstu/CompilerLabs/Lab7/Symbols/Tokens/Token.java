@@ -23,6 +23,10 @@ public abstract class Token<T> extends Symbol{
         return tag;
     }
 
+    public Fragment getCoords() {
+        return coords;
+    }
+
     @Override
     public String toString() {
         return tag + " " + coords + ": " + value;

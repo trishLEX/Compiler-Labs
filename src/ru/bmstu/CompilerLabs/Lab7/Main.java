@@ -36,9 +36,6 @@ public class Main {
         ArrayList<Symbol> symbols = parser.TopDownParse();
 
         for (Symbol s: symbols)
-            System.out.println(s);
-
-        for (Error e: parser.getErrors())
-            System.out.println(e);
+            System.out.println(s.getTag());
     }
 }
