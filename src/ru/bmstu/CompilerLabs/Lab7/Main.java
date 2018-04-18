@@ -1,6 +1,6 @@
 package ru.bmstu.CompilerLabs.Lab7;
 
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.DomainTag;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Message;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
@@ -23,7 +23,7 @@ public class Main {
         do {
             tokens.add(t);
             t = scanner.nextToken();
-        } while (t.getTag() != DomainTag.END_OF_PROGRAM);
+        } while (t.getTag() != TokenTag.END_OF_PROGRAM);
 
         for (Token token: tokens)
             System.out.println(token);
