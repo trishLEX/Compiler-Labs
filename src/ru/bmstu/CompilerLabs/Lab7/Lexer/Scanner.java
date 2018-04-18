@@ -1,5 +1,8 @@
 package ru.bmstu.CompilerLabs.Lab7.Lexer;
 
+import ru.bmstu.CompilerLabs.Lab7.Symbols.*;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
+
 import java.util.ArrayList;
 
 public class Scanner {
@@ -23,44 +26,131 @@ public class Scanner {
                 cur.nextCp();
 
             switch (cur.getChar()) {
-                case '+': {
+                case '<': {
                     Position start = (Position) cur.clone();
                     cur.nextCp();
                     Position follow = (Position) cur.clone();
-                    return new PlusToken('+', start, follow);
+                    return new LBracketToken('<', start, follow);
                 }
-                case '*': {
+                case '>': {
                     Position start = (Position) cur.clone();
                     cur.nextCp();
                     Position follow = (Position) cur.clone();
-                    return new MulToken('*', start, follow);
+                    return new RBracketToken('>', start, follow);
                 }
-                case '(': {
+                case 'a': {
                     Position start = (Position) cur.clone();
+                    String value = "a";
                     cur.nextCp();
-                    Position follow = (Position) cur.clone();
-                    return new LParenToken('(', start, follow);
-                }
-                case ')': {
-                    Position start = (Position) cur.clone();
-                    cur.nextCp();
-                    Position follow = (Position) cur.clone();
-                    return new RParenToken(')', start, follow);
-                }
-                case 'n': {
-                    Position start = (Position) cur.clone();
-                    cur.nextCp();
-                    Position follow = (Position) cur.clone();
-                    return new NumberToken('n', start, follow);
+                    if (cur.getChar() == 'x') {
+                        value += "x";
+                        cur.nextCp();
+                        if (cur.getChar() == 'i') {
+                            value += "i";
+                            cur.nextCp();
+                            if (cur.getChar() == 'o') {
+                                value += "o";
+                                cur.nextCp();
+                                if (cur.getChar() == 'm') {
+                                    value += "m";
+                                    cur.nextCp();
+                                    if (!cur.isLetter())
+                                        return new KeywordToken(value, start, (Position) cur.clone());
+                                }
+                            }
+                        }
+                    }
+
+                    return getGenSymbol(cur, start, value);
                 }
                 default:
-                    messages.add(new Message(true, (Position) cur.clone(), "unexpected character"));
-                    cur.nextCp();
-                    break;
+                    if (cur.isLetter() && cur.isUpperCase())
+                        return getIdent(cur);
+                    else
+                        return getGenSymbol(cur);
+
+//                    if (cur.getChar() != (char) 0xFFFFFFFF)
+//                        messages.add(new Message(true, (Position) cur.clone(), "unexpected character"));
+//                    cur.nextCp();
+//                    break;
             }
         }
 
         return new EndOfProgram(cur, cur);
     }
 
+    private IdentToken getIdent(Position cur) throws CloneNotSupportedException {
+        String value = "";
+        Position start = (Position) cur.clone();
+
+        if (!Character.isLetter(cur.getChar())) {
+            throw new RuntimeException(cur.getChar() + " is not a letter");
+        }
+
+        while (cur.getChar() != (char) 0xFFFFFFFF
+                && !Character.isWhitespace(cur.getChar())
+                && cur.getChar() != '<'
+                && cur.getChar() != '>'
+                && cur.getChar() != '\'') {
+            value += cur.getChar();
+            cur.nextCp();
+        }
+
+        if (cur.getChar() == '\'') {
+            value += cur.getChar();
+            cur.nextCp();
+        }
+
+        if (cur.getChar() != (char) 0xFFFFFFFF
+                && !Character.isWhitespace(cur.getChar())
+                && cur.getChar() != '>'
+                && cur.getChar() != '<')
+            messages.add(new Message(true, (Position) cur.clone(), "' ' expected0"));
+
+        return new IdentToken(value, start, (Position) cur.clone());
+    }
+
+    private GenSymbolToken getGenSymbol(Position cur) throws CloneNotSupportedException {
+        String value = "";
+        Position start = (Position) cur.clone();
+
+        while (cur.getChar() != (char) 0xFFFFFFFF
+                && !Character.isWhitespace(cur.getChar())
+                && cur.getChar() != '<'
+                && cur.getChar() != '>'
+                && cur.getChar() != '\'') {
+            value += cur.getChar();
+            cur.nextCp();
+        }
+
+        if (cur.getChar() != (char) 0xFFFFFFFF
+                && !Character.isWhitespace(cur.getChar())
+                && cur.getChar() != '>'
+                && cur.getChar() != '<')
+
+            messages.add(new Message(true, (Position) cur.clone(), "' ' expected1"));
+
+        return new GenSymbolToken(value, start, (Position) cur.clone());
+    }
+
+    private GenSymbolToken getGenSymbol(Position cur, Position start, String value) throws CloneNotSupportedException {
+        while (cur.getChar() != (char) 0xFFFFFFFF
+                && !Character.isWhitespace(cur.getChar())
+                && cur.getChar() != '<'
+                && cur.getChar() != '>'
+                && cur.getChar() != '\'') {
+            value += cur.getChar();
+            cur.nextCp();
+        }
+
+
+        if (cur.getChar() != (char) 0xFFFFFFFF
+                && !Character.isWhitespace(cur.getChar())
+                && cur.getChar() != '>'
+                && cur.getChar() != '<')
+
+            messages.add(new Message(true, (Position) cur.clone(), "' ' expected2"));
+
+        return new GenSymbolToken(value, start, (Position) cur.clone());
+    }
 }

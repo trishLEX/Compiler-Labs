@@ -1,4 +1,4 @@
-package ru.bmstu.CompilerLabs.Lab7.Lexer;
+package ru.bmstu.CompilerLabs.Lab7.Symbols;
 
 public class Position implements Comparable<Position>, Cloneable{
     private String text;
@@ -50,6 +50,14 @@ public class Position implements Comparable<Position>, Cloneable{
 
     public boolean isLetterOrDigit() {
         return index != text.length() && Character.isLetterOrDigit(text.charAt(index));
+    }
+
+    public boolean isUpperCase() {
+        return index != text.length() && Character.isUpperCase(text.charAt(index));
+    }
+
+    public boolean isLowerCase() {
+        return index != text.length() && Character.isLowerCase(text.charAt(index));
     }
 
     public boolean isDecimalDigit() {

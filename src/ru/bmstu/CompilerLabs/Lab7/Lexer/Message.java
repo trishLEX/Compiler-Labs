@@ -1,5 +1,7 @@
 package ru.bmstu.CompilerLabs.Lab7.Lexer;
 
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Position;
+
 public class Message implements Comparable<Message> {
     private boolean isError;
     private String text;

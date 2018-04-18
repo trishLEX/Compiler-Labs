@@ -1,4 +1,6 @@
-package ru.bmstu.CompilerLabs.Lab7.Lexer;
+package ru.bmstu.CompilerLabs.Lab7.Symbols;
+
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Position;
 
 public class Fragment {
     private Position start, follow;
