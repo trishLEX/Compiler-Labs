@@ -6,4 +6,8 @@ public class GenSymbolToken extends Token<String> {
     public GenSymbolToken(String value, Position start, Position follow) {
         super(TokenTag.GENERAL_SYMBOL, start, follow, value);
     }
+
+    public GenSymbolToken() {
+        super(TokenTag.GENERAL_SYMBOL);
+    }
 }

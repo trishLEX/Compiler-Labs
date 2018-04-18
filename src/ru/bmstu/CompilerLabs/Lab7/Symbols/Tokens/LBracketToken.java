@@ -6,4 +6,8 @@ public class LBracketToken extends Token<Character>{
     public LBracketToken (Character value, Position start, Position follow) {
         super(TokenTag.LBRACKET, start, follow, value);
     }
+
+    public LBracketToken() {
+        super(TokenTag.LBRACKET);
+    }
 }

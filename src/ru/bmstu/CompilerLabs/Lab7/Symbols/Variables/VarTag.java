@@ -12,5 +12,6 @@ public enum VarTag implements SymbolType{
     PRODUCTS1,
     PRODUCT,
     SYMBOLS,
-    SYMBOL
+    SYMBOL,
+    EPSILON
 }

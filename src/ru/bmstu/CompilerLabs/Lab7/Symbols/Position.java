@@ -10,6 +10,10 @@ public class Position implements Comparable<Position>, Cloneable{
         index = 0;
     }
 
+    public static Position dummy() {
+        return new Position("");
+    }
+
     public int getLine() {
         return line;
     }

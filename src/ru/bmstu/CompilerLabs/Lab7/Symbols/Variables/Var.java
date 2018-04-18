@@ -17,4 +17,9 @@ public abstract class Var extends Symbol {
     public VarTag getTag() {
         return tag;
     }
+
+    @Override
+    public String toString() {
+        return tag.toString();
+    }
 }

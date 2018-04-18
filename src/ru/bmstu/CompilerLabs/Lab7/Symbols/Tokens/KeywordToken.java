@@ -6,4 +6,8 @@ public class KeywordToken extends Token<String> {
     public KeywordToken(String value, Position start, Position follow) {
         super(TokenTag.KEYWORD, start, follow, value);
     }
+
+    public KeywordToken() {
+        super(TokenTag.KEYWORD);
+    }
 }

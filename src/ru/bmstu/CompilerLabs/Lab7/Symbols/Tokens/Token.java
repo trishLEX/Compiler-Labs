@@ -15,6 +15,10 @@ public abstract class Token<T> extends Symbol{
         this.value = value;
     }
 
+    protected Token(TokenTag tag) {
+        this.tag = tag;
+    }
+
     public TokenTag getTag() {
         return tag;
     }

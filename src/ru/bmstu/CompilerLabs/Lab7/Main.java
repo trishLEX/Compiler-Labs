@@ -2,10 +2,8 @@ package ru.bmstu.CompilerLabs.Lab7;
 
 import ru.bmstu.CompilerLabs.Lab7.Parser.Error;
 import ru.bmstu.CompilerLabs.Lab7.Parser.Parser;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
-import ru.bmstu.CompilerLabs.Lab7.Lexer.Message;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,9 +30,13 @@ public class Main {
 //
 //        for (Message msg: scanner.getMessages())
 //            System.out.println(msg);
+        //System.out.println(TokenTag.GENERAL_SYMBOL.ordinal());
 
         Parser parser = new Parser(program);
-        parser.parse();
+        ArrayList<Symbol> symbols = parser.TopDownParse();
+
+        for (Symbol s: symbols)
+            System.out.println(s);
 
         for (Error e: parser.getErrors())
             System.out.println(e);

@@ -1,14 +1,10 @@
 package ru.bmstu.CompilerLabs.Lab7.Parser;
 
-import javafx.scene.chart.ValueAxis;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Variables.SVar;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Variables.Var;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Variables.VarTag;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Variables.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +35,9 @@ public class Parser {
     private Scanner scanner;
     private ArrayList<Error> errors;
     private Stack<Symbol> stack;
-    private HashMap<SymbolType, Integer> numMap;
+    private ArrayList<Symbol> result;
+    private HashMap<SymbolType, Integer> varMap;
+    private HashMap<SymbolType, Integer> tokenMap;
 
     public Parser(String program) {
         this.input = new Stack<>();
@@ -47,22 +45,27 @@ public class Parser {
         this.errors = new ArrayList<>();
         this.stack = new Stack<>();
 
-        this.numMap = new HashMap<>();
-        numMap.put(VarTag.S, 0);
-        numMap.put(VarTag.AXIOM,  1);
-        numMap.put(VarTag.RULES,  2);
-        numMap.put(VarTag.RULES1, 3);
-        numMap.put(VarTag.RULE,   4);
-        numMap.put(VarTag.PRODUCTS,  5);
-        numMap.put(VarTag.PRODUCTS1, 6);
-        numMap.put(VarTag.PRODUCT, 7);
-        numMap.put(VarTag.SYMBOLS, 8);
-        numMap.put(VarTag.SYMBOL, 9);
-        numMap.put(TokenTag.LBRACKET, 10);
-        numMap.put(TokenTag.RBRACKET, 11);
-        numMap.put(TokenTag.KEYWORD, 12);
-        numMap.put(TokenTag.IDENTIFIER, 13);
-        numMap.put(TokenTag.GENERAL_SYMBOL, 14);
+        this.varMap = new HashMap<>();
+        varMap.put(VarTag.S, 0);
+        varMap.put(VarTag.AXIOM,  1);
+        varMap.put(VarTag.RULES,  2);
+        varMap.put(VarTag.RULES1, 3);
+        varMap.put(VarTag.RULE,   4);
+        varMap.put(VarTag.PRODUCTS,  5);
+        varMap.put(VarTag.PRODUCTS1, 6);
+        varMap.put(VarTag.PRODUCT, 7);
+        varMap.put(VarTag.SYMBOLS, 8);
+        varMap.put(VarTag.SYMBOL, 9);
+
+        this.tokenMap = new HashMap<>();
+        tokenMap.put(TokenTag.LBRACKET, 2);
+        tokenMap.put(TokenTag.RBRACKET, 3);
+        tokenMap.put(TokenTag.KEYWORD, 4);
+        tokenMap.put(TokenTag.IDENTIFIER, 0);
+        tokenMap.put(TokenTag.GENERAL_SYMBOL, 1);
+        tokenMap.put(TokenTag.END_OF_PROGRAM, 5);
+
+        this.result = new ArrayList<>();
     }
 
     public ArrayList<Error> getErrors() {
@@ -73,7 +76,71 @@ public class Parser {
         this.errors.add(new Error(error));
     }
 
-    public void parse() throws CloneNotSupportedException {
+    private void parse() throws CloneNotSupportedException {
+        Symbol X = stack.peek();
+        if (tokenMap.containsKey(X.getTag())) {
+            if (X.getTag() == input.peek().getTag()) {
+                stack.pop();
+                input.push(scanner.nextToken());
+            } else reportError("error");
+        } else {
+            System.out.print(X);
+            System.out.println(" " + X.getTag() + " " + input.peek().getTag() + " " + varMap.get(X.getTag()) + " " + tokenMap.get(input.peek().getTag()));
+            if (table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())][0] != -1) {
+                stack.pop();
+                ArrayList<Symbol> symbols = new ArrayList<>();
+                for (int num: table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())]) {
+                    Symbol symbol = makeSymbol(num);
+                    symbols.add(symbol);
+                    result.add(symbol);
+                }
 
+                for (int i = symbols.size() - 1; i >= 0; i--) {
+                    if (symbols.get(i).getTag() != VarTag.EPSILON)
+                        stack.push(symbols.get(i));
+                }
+            } else reportError("error");
+        }
+    }
+
+    public ArrayList<Symbol> TopDownParse() throws CloneNotSupportedException {
+        ////input.push(tokens.pop());
+        stack.push(new SVar());
+        input.push(scanner.nextToken());
+
+        do {
+            parse();
+        } while (!stack.isEmpty() && input.peek().getTag() != TokenTag.END_OF_PROGRAM);
+        //Без второго условия при неправильной программе уходит в вечный цикл
+
+        parse();
+
+        if (!stack.isEmpty())
+            reportError("Stack is not empty");
+
+        return result;
+    }
+
+    private Symbol makeSymbol(int number) {
+        switch (number) {
+            case 0: return new SVar();
+            case 1: return new AxiomVar();
+            case 2: return new RulesVar();
+            case 3: return new Rules1Var();
+            case 4: return new RuleVar();
+            case 5: return new ProductsVar();
+            case 6: return new Products1Var();
+            case 7: return new ProductVar();
+            case 8: return new SymbolsVar();
+            case 9: return new SymbolVar();
+            case 10: return new LBracketToken();
+            case 11: return new RBracketToken();
+            case 12: return new KeywordToken();
+            case 13: return new IdentToken();
+            case 14: return new GenSymbolToken();
+            case 15: return new EpsVar();
+            default:
+                throw new RuntimeException("Invalid number: " + number);
+        }
     }
 }
