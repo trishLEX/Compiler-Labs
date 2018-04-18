@@ -1,5 +1,7 @@
 package ru.bmstu.CompilerLabs.Lab7;
 
+import ru.bmstu.CompilerLabs.Lab7.Parser.Error;
+import ru.bmstu.CompilerLabs.Lab7.Parser.Parser;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Message;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
@@ -17,18 +19,24 @@ public class Main {
         String program = new String(Files.readAllBytes(Paths.get(PATH)));
         Scanner scanner = new Scanner(program);
 
-        ArrayList<Token> tokens = new ArrayList<>();
+//        ArrayList<Token> tokens = new ArrayList<>();
+//
+//        Token t = scanner.nextToken();
+//        do {
+//            tokens.add(t);
+//            t = scanner.nextToken();
+//        } while (t.getTag() != TokenTag.END_OF_PROGRAM);
+//
+//        for (Token token: tokens)
+//            System.out.println(token);
+//
+//        for (Message msg: scanner.getMessages())
+//            System.out.println(msg);
 
-        Token t = scanner.nextToken();
-        do {
-            tokens.add(t);
-            t = scanner.nextToken();
-        } while (t.getTag() != TokenTag.END_OF_PROGRAM);
+        Parser parser = new Parser(program);
+        parser.parse();
 
-        for (Token token: tokens)
-            System.out.println(token);
-
-        for (Message msg: scanner.getMessages())
-            System.out.println(msg);
+        for (Error e: parser.getErrors())
+            System.out.println(e);
     }
 }

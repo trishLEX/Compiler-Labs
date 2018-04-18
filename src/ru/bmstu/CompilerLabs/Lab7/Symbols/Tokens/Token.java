@@ -4,7 +4,7 @@ import ru.bmstu.CompilerLabs.Lab7.Symbols.Fragment;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Position;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 
-public abstract class Token<T> extends Symbol<T>{
+public abstract class Token<T> extends Symbol{
     private TokenTag tag;
     private Fragment coords;
     private T value;
