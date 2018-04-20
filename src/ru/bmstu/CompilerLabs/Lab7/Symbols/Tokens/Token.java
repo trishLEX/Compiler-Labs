@@ -27,6 +27,15 @@ public abstract class Token<T> extends Symbol{
         return coords;
     }
 
+    public void setToken(Fragment coords, T value) {
+        this.coords = coords;
+        this.value = value;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
     @Override
     public String toString() {
         return tag + " " + coords + ": " + value;

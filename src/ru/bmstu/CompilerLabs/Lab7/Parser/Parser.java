@@ -31,7 +31,7 @@ public class Parser {
           /*15 ε         */
     };
 
-    private Stack<Symbol> input;
+    private Stack<Token> input;
     private Scanner scanner;
     private Stack<Symbol> stack;
     private ArrayList<Symbol> result;
@@ -70,20 +70,21 @@ public class Parser {
         Symbol X = stack.peek();
         if (tokenMap.containsKey(X.getTag())) {
             if (X.getTag() == input.peek().getTag()) {
-                stack.pop();
+                Token s = (Token) stack.pop();
+                s.setToken(input.peek().getCoords(), input.peek().getValue());
                 input.push(scanner.nextToken());
             } else throw new RuntimeException(X.getTag() + " expected, got " + input.peek());
         } else {
-            //System.out.print(X);
-            //System.out.println(" " + X.getTag() + " " + input.peek().getTag() + " " + varMap.get(X.getTag()) + " " + tokenMap.get(input.peek().getTag()));
             if (table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())][0] != -1) {
-                stack.pop();
+                Symbol s = stack.pop();
                 ArrayList<Symbol> symbols = new ArrayList<>();
                 for (int num: table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())]) {
                     Symbol symbol = makeSymbol(num);
                     symbols.add(symbol);
-                    result.add(symbol);
+                    result.add(s);
                 }
+
+                s.addSymbols(symbols);
 
                 for (int i = symbols.size() - 1; i >= 0; i--) {
                     if (symbols.get(i).getTag() != VarTag.EPSILON)
@@ -101,6 +102,8 @@ public class Parser {
         do {
             parse();
         } while (!stack.isEmpty());
+
+        Symbol.printTree(result.get(0), 0);
 
         if (!stack.isEmpty())
             System.out.println("stack is not empty");
