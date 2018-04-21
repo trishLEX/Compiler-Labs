@@ -12,7 +12,7 @@ import java.util.Stack;
 
 public class Parser {
     private static final int[][][] table = {
-                              /*IDENTF   GEN_SYMBOL   <                         >          axiom   $ */
+                              /*NonTerm  Term         <                         >          axiom   $ */
           /*0  S         */    {{-1},    {-1},     {1, 2},                    {-1},        {-1}, {-1}},
           /*1  AXIOM     */    {{-1},    {-1},     {10, 12, 10, 13, 11, 11},  {-1},        {-1}, {-1}},
           /*2  RULES     */    {{-1},    {-1},     {4, 3},                    {-1},        {-1}, {-1}},
@@ -26,8 +26,8 @@ public class Parser {
           /*10 <         */
           /*11 >         */
           /*12 axiom     */
-          /*13 IDENTF    */
-          /*14 GEN_SYMBOL*/
+          /*13 NonTerm   */
+          /*14 Term      */
           /*15 ε         */
     };
 
@@ -59,8 +59,8 @@ public class Parser {
         tokenMap.put(TokenTag.LBRACKET, 2);
         tokenMap.put(TokenTag.RBRACKET, 3);
         tokenMap.put(TokenTag.KEYWORD, 4);
-        tokenMap.put(TokenTag.IDENTIFIER, 0);
-        tokenMap.put(TokenTag.GENERAL_SYMBOL, 1);
+        tokenMap.put(TokenTag.NONTERMINAL, 0);
+        tokenMap.put(TokenTag.TERMINAL, 1);
         tokenMap.put(TokenTag.END_OF_PROGRAM, 5);
 
         this.result = new ArrayList<>();
@@ -79,8 +79,10 @@ public class Parser {
                 Symbol s = stack.pop();
                 ArrayList<Symbol> symbols = new ArrayList<>();
                 for (int num: table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())]) {
-                    Symbol symbol = makeSymbol(num);
-                    symbols.add(symbol);
+                    //if (num != 15) {
+                        Symbol symbol = makeSymbol(num);
+                        symbols.add(symbol);
+                    //}
                     result.add(s);
                 }
 
@@ -95,7 +97,7 @@ public class Parser {
         }
     }
 
-    public ArrayList<Symbol> TopDownParse() throws CloneNotSupportedException {
+    public void TopDownParse() throws CloneNotSupportedException {
         stack.push(new SVar());
         input.push(scanner.nextToken());
 
@@ -107,8 +109,6 @@ public class Parser {
 
         if (!stack.isEmpty())
             System.out.println("stack is not empty");
-
-        return result;
     }
 
     private Symbol makeSymbol(int number) {
@@ -126,8 +126,8 @@ public class Parser {
             case 10: return new LBracketToken();
             case 11: return new RBracketToken();
             case 12: return new KeywordToken();
-            case 13: return new IdentToken();
-            case 14: return new GenSymbolToken();
+            case 13: return new NonTermToken();
+            case 14: return new TermToken();
             case 15: return new EpsVar();
             default:
                 throw new RuntimeException("Invalid number: " + number);

@@ -79,7 +79,7 @@ public class Scanner {
         return new EndOfProgram(cur, cur);
     }
 
-    private IdentToken getIdent(Position cur) throws CloneNotSupportedException {
+    private NonTermToken getIdent(Position cur) throws CloneNotSupportedException {
         String value = "";
         Position start = (Position) cur.clone();
 
@@ -91,6 +91,7 @@ public class Scanner {
                 && !Character.isWhitespace(cur.getChar())
                 && cur.getChar() != '<'
                 && cur.getChar() != '>'
+                && cur.getChar() != '\\'
                 && cur.getChar() != '\'') {
             value += cur.getChar();
             cur.nextCp();
@@ -107,10 +108,10 @@ public class Scanner {
                 && cur.getChar() != '<')
             messages.add(new Message(true, (Position) cur.clone(), "' ' expected0"));
 
-        return new IdentToken(value, start, (Position) cur.clone());
+        return new NonTermToken(value, start, (Position) cur.clone());
     }
 
-    private GenSymbolToken getGenSymbol(Position cur) throws CloneNotSupportedException {
+    private TermToken getGenSymbol(Position cur) throws CloneNotSupportedException {
         String value = "";
         Position start = (Position) cur.clone();
 
@@ -130,10 +131,10 @@ public class Scanner {
 
             messages.add(new Message(true, (Position) cur.clone(), "' ' expected1"));
 
-        return new GenSymbolToken(value, start, (Position) cur.clone());
+        return new TermToken(value, start, (Position) cur.clone());
     }
 
-    private GenSymbolToken getGenSymbol(Position cur, Position start, String value) throws CloneNotSupportedException {
+    private TermToken getGenSymbol(Position cur, Position start, String value) throws CloneNotSupportedException {
         while (cur.getChar() != (char) 0xFFFFFFFF
                 && !Character.isWhitespace(cur.getChar())
                 && cur.getChar() != '<'
@@ -151,6 +152,6 @@ public class Scanner {
 
             messages.add(new Message(true, (Position) cur.clone(), "' ' expected2"));
 
-        return new GenSymbolToken(value, start, (Position) cur.clone());
+        return new TermToken(value, start, (Position) cur.clone());
     }
 }

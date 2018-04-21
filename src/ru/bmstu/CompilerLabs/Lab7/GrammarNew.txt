@@ -13,6 +13,7 @@
 <SYMBOLS <SYMBOL SYMBOLS>
          <> >
 <SYMBOL <GENERAL_SYMBOL> <IDENTF> >
+<IDENTF <IDENT> <IDENT'> >
 
 // Лексическое описание
 GENERAL_SYMBOL ::= ANY_SYMBOL - {<,>,'} //lowercase
