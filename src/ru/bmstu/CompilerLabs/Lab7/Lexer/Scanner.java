@@ -26,6 +26,22 @@ public class Scanner {
                 cur.nextCp();
 
             switch (cur.getChar()) {
+                case '\\': {
+                    Position start = (Position) cur.clone();
+                    String value = "\\";
+                    cur.nextCp();
+                    if (cur.getChar() == '<' || cur.getChar() == '>') {
+                        value += cur.getChar();
+                        cur.nextCp();
+                    } else {
+                        while (cur.getChar() != '\\' && !cur.isWhiteSpace()) {
+                            value += cur.getChar();
+                            cur.nextCp();
+                        }
+                    }
+                    Position follow = (Position) cur.clone();
+                    return new TermToken(value, start, follow);
+                }
                 case '<': {
                     Position start = (Position) cur.clone();
                     cur.nextCp();
