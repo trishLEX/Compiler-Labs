@@ -1,0 +1,22 @@
+// Синтаксическое описание
+<axiom <S>>
+<S      <AXIOM RULES>>
+<AXIOM  < \<axiom \<IDENTF\>\> >>
+<RULES  <RULE RULES'>>
+<RULES' <RULE RULES'>
+        <> >
+<RULE   < \<IDENTF PRODUCTS\> >>
+<PRODUCTS <PRODUCT PRODUCTS'>>
+<PRODUCTS' <PRODUCT PRODUCTS'>
+           <> >
+<PRODUCT < \<SYMBOLS\> >>
+<SYMBOLS <SYMBOL SYMBOLS>
+         <> >
+<SYMBOL <GENERAL_SYMBOL> <IDENTF> >
+
+// Лексическое описание
+GENERAL_SYMBOL ::= ANY_SYMBOL - {<,>,'} //lowercase
+IDENT          ::= LETTER | LETTERSLIST
+LETTERSLIST    ::= LETTER IDENT
+IDENTF         ::= IDENT' | IDENT // uppercase
+
