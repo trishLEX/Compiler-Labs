@@ -1,9 +1,9 @@
 package ru.bmstu.CompilerLabs.Lab7;
 
-import ru.bmstu.CompilerLabs.Lab7.Parser.Parser;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
+import ru.bmstu.CompilerLabs.Lab7.Parser.Parser;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Variables.SVar;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,5 +33,36 @@ public class Main {
 
         Parser parser = new Parser(program);
         parser.TopDownParse();
+
+//        LBracketToken lb = new LBracketToken();
+//        System.out.println(lb.getTag().ordinal());
+//        Filler filler = new Filler();
+//        filler.fill(lb);
+//
+//        NonTermToken nt = new NonTermToken();
+//        filler.fill(nt);
+//
+//        LBracketToken lb2 = new LBracketToken();
+//        filler.fill(lb2);
+//
+//        TermToken tt = new TermToken();
+//        filler.fill(tt);
+//        NonTermToken nt2 = new NonTermToken();
+//        filler.fill(nt2);
+//
+//        RBracketToken rb2 = new RBracketToken();
+//        filler.fill(rb2);
+//
+//        LBracketToken lb3 = new LBracketToken();
+//        filler.fill(lb3);
+//
+//        NonTermToken nt3 = new NonTermToken();
+//        filler.fill(nt3);
+//
+//        RBracketToken rb3 = new RBracketToken();
+//        filler.fill(rb3);
+//
+//        RBracketToken rb = new RBracketToken();
+//        filler.fill(rb);
     }
 }

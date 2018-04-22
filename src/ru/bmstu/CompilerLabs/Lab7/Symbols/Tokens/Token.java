@@ -40,5 +40,10 @@ public abstract class Token<T> extends Symbol{
     public String toString() {
         return tag + " " + coords + ": " + value;
     }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        return this.value.equals(((Token) obj).value);
+//    }
 }
 

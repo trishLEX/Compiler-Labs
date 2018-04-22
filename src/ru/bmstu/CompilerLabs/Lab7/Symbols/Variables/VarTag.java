@@ -13,5 +13,10 @@ public enum VarTag implements SymbolType{
     PRODUCT,
     SYMBOLS,
     SYMBOL,
-    EPSILON
+    EPSILON;
+
+    @Override
+    public boolean isTokenTag() {
+        return false;
+    }
 }

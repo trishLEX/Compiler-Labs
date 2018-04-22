@@ -1,5 +1,7 @@
 package ru.bmstu.CompilerLabs.Lab7.Parser;
 
+import ru.bmstu.CompilerLabs.Lab7.FFSelecter;
+import ru.bmstu.CompilerLabs.Lab7.Filler;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
@@ -34,9 +36,13 @@ public class Parser {
     private Stack<Token> input;
     private Scanner scanner;
     private Stack<Symbol> stack;
-    private ArrayList<Symbol> result;
+    //private ArrayList<Symbol> result;
+    private Symbol start;
     private HashMap<SymbolType, Integer> varMap;
     private HashMap<SymbolType, Integer> tokenMap;
+    private Filler filler;
+    private FFSelecter selecter;
+    private ArrayList<Token> termsAndNonTerms = new ArrayList<Token>();
 
     public Parser(String program) {
         this.input = new Stack<>();
@@ -63,7 +69,10 @@ public class Parser {
         tokenMap.put(TokenTag.TERMINAL, 1);
         tokenMap.put(TokenTag.END_OF_PROGRAM, 5);
 
-        this.result = new ArrayList<>();
+        //this.result = new ArrayList<>();
+        this.start = new SVar();
+
+        this.filler = new Filler();
     }
 
     private void parse() throws CloneNotSupportedException {
@@ -72,6 +81,14 @@ public class Parser {
             if (X.getTag() == input.peek().getTag()) {
                 Token s = (Token) stack.pop();
                 s.setToken(input.peek().getCoords(), input.peek().getValue());
+
+                if (s.getTag() == TokenTag.NONTERMINAL || s.getTag() == TokenTag.TERMINAL) {
+                    termsAndNonTerms.add(s);
+                    //filler.fill(s);
+                }
+
+                filler.fill(s);
+
                 input.push(scanner.nextToken());
             } else throw new RuntimeException(X.getTag() + " expected, got " + input.peek());
         } else {
@@ -83,13 +100,13 @@ public class Parser {
                         Symbol symbol = makeSymbol(num);
                         symbols.add(symbol);
                     //}
-                    result.add(s);
+                    //result.add(s);
                 }
 
                 s.addSymbols(symbols);
 
                 for (int i = symbols.size() - 1; i >= 0; i--) {
-                    if (symbols.get(i).getTag() != VarTag.EPSILON)
+                    if (symbols.get(i).getTag() != TokenTag.EPSILON)
                         stack.push(symbols.get(i));
                 }
             } else
@@ -97,15 +114,38 @@ public class Parser {
         }
     }
 
+//    private void fill(Token s) {
+//
+//    }
+
     public void TopDownParse() throws CloneNotSupportedException {
-        stack.push(new SVar());
+        //start = new SVar();
+        stack.push(start);
         input.push(scanner.nextToken());
 
         do {
             parse();
         } while (!stack.isEmpty());
 
-        Symbol.printTree(result.get(0), 0);
+        //Symbol.printTree(start, 0);
+
+        selecter = new FFSelecter(filler.getRules());
+
+        for (NonTermToken t: filler.getRules().keySet()) {
+            selecter.selectFIRST(t);
+        }
+
+        for (NonTermToken t: filler.getRules().keySet()) {
+            if (t.isAxiom())
+                selecter.selectFOLLOW(t);
+        }
+
+        for (NonTermToken t: filler.getRules().keySet()) {
+            if (!t.isAxiom())
+                selecter.selectFOLLOW(t);
+        }
+
+        selecter.follow();
 
         if (!stack.isEmpty())
             System.out.println("stack is not empty");
@@ -128,7 +168,7 @@ public class Parser {
             case 12: return new KeywordToken();
             case 13: return new NonTermToken();
             case 14: return new TermToken();
-            case 15: return new EpsVar();
+            case 15: return new EpsToken();
             default:
                 throw new RuntimeException("Invalid number: " + number);
         }

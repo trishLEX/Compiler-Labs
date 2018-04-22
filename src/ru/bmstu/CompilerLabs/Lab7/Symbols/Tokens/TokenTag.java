@@ -8,5 +8,11 @@ public enum TokenTag implements SymbolType{
     LBRACKET,
     RBRACKET,
     KEYWORD,
-    END_OF_PROGRAM
+    EPSILON,
+    END_OF_PROGRAM;
+
+    @Override
+    public boolean isTokenTag() {
+        return true;
+    }
 }
