@@ -21,8 +21,9 @@ public class NonTermToken extends Token<String>{
         this.productions.add(prods);
     }
 
-    public void setAxiom(boolean flag) {
-        this.addFollow(new EpsToken());
+    public void setAxiom(boolean flag, Token t) {
+        //this.addFollow(new EndOfProgram(Position.dummy(), Position.dummy()));
+        this.addFollow(t);
         this.isAxiom = flag;
     }
 

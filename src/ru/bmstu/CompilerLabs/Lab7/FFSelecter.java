@@ -9,31 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FFSelecter {
-    private HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules = new HashMap<>();
+    private HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules;
 
     public FFSelecter(HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules) {
         this.rules = rules;
     }
 
-//    private ArrayList<Token> F(ArrayList<Symbol> symbols) {
-//        if (symbols.get(0).getTag().isTokenTag()) {
-//            ArrayList<Token> res = new ArrayList<>();
-//            res.add((Token) symbols.get(0));
-//            return res;
-//        } else if (!symbols.get(0).getTag().isTokenTag()) {
-//            if (symbols.get(0).isEpsIn()) {
-//                ArrayList<Token> res = new ArrayList<>(symbols.get(0).getFirstWithoutEps());
-//                ArrayList<Symbol> slice = new ArrayList<>();
-//                for (int i = 1; i < symbols.size(); i++)
-//                    slice.add(symbols.get(i));
-//                res.addAll(F(slice));
-//                return res;
-//            } else {
-//                return symbols.get(0).getFirst();
-//            }
-//        } else
-//            throw new RuntimeException("ERROR PIZDEC");
-//    }
 
     private ArrayList<Token> getFirst(Symbol s) {
         ArrayList<Token> res = new ArrayList<>();
@@ -46,8 +27,6 @@ public class FFSelecter {
 
             return res;
         }
-
-        //return res;
     }
 
     public void selectFIRST(Symbol s) {
@@ -60,59 +39,47 @@ public class FFSelecter {
         }
     }
 
-    public void selectFOLLOW(Symbol s) {
-        for (ArrayList<Symbol> symbols: rules.get(s)) {
-            for (int i = 1; i < symbols.size() - 1; i++) {
-                if (symbols.get(i).getTag() == TokenTag.NONTERMINAL)
-                    symbols.get(i).addFollowAll(symbols.get(i + 1).getFirstWithoutEps());
-            }
-        }
-    }
-
-    public void follow() {
-        boolean isChanged = true;
-        int count = 0;
-        while (isChanged && count != 2 * rules.keySet().size()) {
-//            for (Token s : rules.keySet()) {
-//                if (((NonTermToken) s).getValue().equals("F")) {
-//                    System.out.println(s);
-//                }
-//                for (ArrayList<Symbol> symbols : rules.get(s)) {
-//                    //TODO возможно стоит проверить, что symbols.size() == 1 (правило бесполезное)
-//                    //S → uY
-//                    if (symbols.get(symbols.size() - 1).getTag() == TokenTag.NONTERMINAL) {
-//                        System.out.println("ХУЙ " + symbols + " " + (symbols.size() - 1) + " " + symbols.get(symbols.size() - 1));
-//                        isChanged = symbols.get(symbols.size() - 1).addFollowAll(s.getFollow());
-//                    } else
-//                        isChanged = false;
-//
-//                    //S → uYv
-//                    for (int i = 1; i < symbols.size() - 1; i++) {
-//                        if (symbols.get(i).getTag() == TokenTag.NONTERMINAL && symbols.get(i + 1).isEpsIn())
-//                            isChanged = symbols.get(symbols.size() - 1).addFollowAll(s.getFollow());
-//                        else
-//                            isChanged = false;
-//                    }
-//                }
-//            }
-
-            for (NonTermToken s: rules.keySet()) {
-                for (ArrayList<Symbol> symbols : rules.get(s)) {
-                    for (int i = 0; i < symbols.size() - 1; i++) {
-                        Symbol nt = symbols.get(i);
-                        if (nt.getTag() == TokenTag.NONTERMINAL) {
-                            isChanged = nt.addFollowAll(symbols.get(i + 1).getFirst());
-                            if (symbols.get(i + 1).isEpsIn()) {
-                                isChanged = nt.addFollowAll(s.getFollow());
-                            }
-                            if (isChanged)
-                                count = 0;
-                            else
-                                count++;
-                        }
+    public void selectFOLLOW() {
+        for (NonTermToken x: rules.keySet()) {
+            for (ArrayList<Symbol> rule: rules.get(x)) {
+                for (int i = 1; i < rule.size() - 1; i++) {
+                    if (rule.get(i).getTag() == TokenTag.NONTERMINAL) {
+                        rule.get(i).addFollowAll(rule.get(i + 1).getFirstWithoutEps());
                     }
                 }
             }
         }
+
+
+        boolean isChanged = true;
+        int count = getFollowCount();
+        while (isChanged) {
+            for (NonTermToken x: rules.keySet()) {
+                for (ArrayList<Symbol> rule: rules.get(x)) {
+                    for (int i = 1; i < rule.size() - 1; i++) {
+                        if (rule.get(i).getTag() == TokenTag.NONTERMINAL && rule.get(i + 1).isEpsIn()) {
+                            rule.get(i).addFollowAll(x.getFollow());
+                        }
+                    }
+
+                    if (rule.get(rule.size() - 1).getTag() == TokenTag.NONTERMINAL) {
+                        rule.get(rule.size() - 1).addFollowAll(x.getFollow());
+                    }
+                }
+            }
+
+            int oldCount = count;
+            count = getFollowCount();
+            if (oldCount == count)
+                isChanged = false;
+        }
+    }
+
+    private int getFollowCount() {
+        int sum = 0;
+        for (NonTermToken x: rules.keySet())
+            sum += x.getFollow().size();
+
+        return sum;
     }
 }

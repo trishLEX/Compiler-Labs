@@ -43,6 +43,7 @@ public class Parser {
     private Filler filler;
     private FFSelecter selecter;
     private ArrayList<Token> termsAndNonTerms = new ArrayList<Token>();
+    private ArrayList<Integer>[][] generatedTable;
 
     public Parser(String program) {
         this.input = new Stack<>();
@@ -84,7 +85,6 @@ public class Parser {
 
                 if (s.getTag() == TokenTag.NONTERMINAL || s.getTag() == TokenTag.TERMINAL) {
                     termsAndNonTerms.add(s);
-                    //filler.fill(s);
                 }
 
                 filler.fill(s);
@@ -96,11 +96,8 @@ public class Parser {
                 Symbol s = stack.pop();
                 ArrayList<Symbol> symbols = new ArrayList<>();
                 for (int num: table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())]) {
-                    //if (num != 15) {
-                        Symbol symbol = makeSymbol(num);
-                        symbols.add(symbol);
-                    //}
-                    //result.add(s);
+                    Symbol symbol = makeSymbol(num);
+                    symbols.add(symbol);
                 }
 
                 s.addSymbols(symbols);
@@ -114,12 +111,7 @@ public class Parser {
         }
     }
 
-//    private void fill(Token s) {
-//
-//    }
-
     public void TopDownParse() throws CloneNotSupportedException {
-        //start = new SVar();
         stack.push(start);
         input.push(scanner.nextToken());
 
@@ -128,6 +120,7 @@ public class Parser {
         } while (!stack.isEmpty());
 
         //Symbol.printTree(start, 0);
+        HashMap<Symbol, Integer> fillerTable = filler.getTable();
 
         selecter = new FFSelecter(filler.getRules());
 
@@ -135,20 +128,51 @@ public class Parser {
             selecter.selectFIRST(t);
         }
 
-        for (NonTermToken t: filler.getRules().keySet()) {
-            if (t.isAxiom())
-                selecter.selectFOLLOW(t);
-        }
-
-        for (NonTermToken t: filler.getRules().keySet()) {
-            if (!t.isAxiom())
-                selecter.selectFOLLOW(t);
-        }
-
-        selecter.follow();
+        selecter.selectFOLLOW();
 
         if (!stack.isEmpty())
             System.out.println("stack is not empty");
+
+        HashMap<NonTermToken, Integer> nonterms = filler.getNonterminals();
+        HashMap<Symbol, Integer> terms = filler.getTerminals();
+
+        generatedTable = new ArrayList[filler.getNonterminals().keySet().size()][filler.getTerminals().keySet().size()];
+        for (int i = 0; i < filler.getNonterminals().keySet().size(); i++) {
+            for (int j = 0; j < filler.getTerminals().keySet().size(); j++) {
+                ArrayList<Integer> list = new ArrayList<>();
+                list.add(-1);
+                generatedTable[i][j] = list;
+            }
+        }
+
+        for (NonTermToken x: filler.getRules().keySet()) {
+            for (ArrayList<Symbol> u: filler.getRules().get(x)) {
+                for (Token a: u.get(0).getFirst()) {
+                    Integer error = -1;
+                    generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(a)].remove(error);
+                    ArrayList<Integer> res = new ArrayList<>();
+                    for (Symbol y: u)
+                        res.add(fillerTable.get(y));
+
+                    generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(a)].addAll(res);
+
+                    if (a.getTag() == TokenTag.EPSILON) {
+                        for (Token b: x.getFollow()) {
+                            for (Symbol z: u) {
+                                if (!generatedTable[nonterms.get(x)][terms.get(b)].contains(fillerTable.get(z)))
+                                    generatedTable[nonterms.get(x)][terms.get(b)].add(fillerTable.get(z));
+                            }
+
+                            System.out.print("TERM: " + b + " ");
+                            System.out.println(terms.get(b));
+                            generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(b)].remove(error);
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println(generatedTable);
     }
 
     private Symbol makeSymbol(int number) {

@@ -1,10 +1,7 @@
 package ru.bmstu.CompilerLabs.Lab7;
 
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.EpsToken;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.NonTermToken;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,10 +17,20 @@ public class Filler {
     private int currentProdIndex = -1;
 
     private HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules = new HashMap<>();
+    private HashMap<Symbol, Integer> terminals = new HashMap<>();
+    private HashMap<NonTermToken, Integer> nonterminals = new HashMap<>();
+    private EpsToken epsilon = new EpsToken();
+    private int termCount = 0;
+    private int nonTermCount = 0;
+
+    public Filler() {
+        epsilon.addFirst(epsilon);
+        terminals.put(epsilon, termCount++);
+    }
 
     public void fill(Token s) {
         // *<* T <P> <P> >
-        System.out.print(s.getTag() + " ");
+        //System.out.print(s.getTag() + " ");
         if (s.getTag() == TokenTag.LBRACKET && !isFirstLBracket) {
             isFirstLBracket = true;
 
@@ -34,22 +41,13 @@ public class Filler {
                 isFirstLine = false;
             } else {
                 if (s.getValue().equals(axiomValue)) {
-                    System.out.println("AAAAAAAAAAAAAAAAAAAA " + s);
-                    ((NonTermToken) s).setAxiom(true);
+                    ((NonTermToken) s).setAxiom(true, epsilon);
                 }
                 isFillingBracket = true;
                 current = (NonTermToken) s;
 
-
-
                 boolean isContained = false;
                 for (NonTermToken t: rules.keySet()) {
-//                    System.out.println("CURRENT: " + current + " " + current.getValue());
-//                    System.out.println("T: " + t + " " + t.getValue());
-//                    System.out.println(t + " " + current + " " + (t.getValue().equals(s.getValue())));
-//                    String tStr = t.getValue();
-//                    String curStr = current.getValue();
-//                    System.out.println("DEBUG: " + (tStr.equals(curStr)));
                     if (t.getValue().equals(s.getValue())) {
                         isContained = true;
                         current = t;
@@ -57,8 +55,10 @@ public class Filler {
                     }
                 }
 
-                if (!isContained)
+                if (!isContained) {
                     rules.put(current, new ArrayList<>());
+                    nonterminals.put(current, nonTermCount++);
+                }
             }
 
         //< T *<*P><P> >
@@ -71,7 +71,7 @@ public class Filler {
         } else if (isFilling && s.getTag() == TokenTag.RBRACKET) {
             ArrayList<Symbol> list = rules.get(current).get(currentProdIndex);
             if (list.isEmpty())
-                list.add(new EpsToken());
+                list.add(epsilon);
 
             current.addProductions(rules.get(current).get(currentProdIndex));
             isFilling = false;
@@ -81,6 +81,25 @@ public class Filler {
             ArrayList<ArrayList<Symbol>> productions = rules.get(current);
 
             boolean isContained = false;
+            TermToken terminal = null;
+            if (s.getTag() == TokenTag.TERMINAL) {
+                for (Symbol t: terminals.keySet()) {   //TODO можно использовать keySet().contains()
+                    if (t.getTag() != TokenTag.EPSILON && ((TermToken) t).getValue().equals(s.getValue())) {
+                        isContained = true;
+                        terminal = (TermToken) t;
+                        break;
+                    }
+                }
+
+                if (!isContained) {
+                    terminals.put(s, termCount++);
+                    s.addFirst(s);
+                } else {
+                    s = terminal;
+                }
+            }
+
+            isContained = false;
             NonTermToken token = null;
             for (NonTermToken t: rules.keySet()) {
                 if (t.getValue().equals(s.getValue())) {
@@ -95,13 +114,14 @@ public class Filler {
             else {
                 productions.get(currentProdIndex).add(s);
 
-                if (s.getTag() == TokenTag.NONTERMINAL)
+                if (s.getTag() == TokenTag.NONTERMINAL) {
                     rules.put((NonTermToken) s, new ArrayList<>());
+                    nonterminals.put((NonTermToken) s, nonTermCount++);
+                }
             }
 
             if (s.getValue().equals(axiomValue)) {
-                System.out.println("AAAAAAAAAAAAAAAAAAAA " + s);
-                ((NonTermToken) s).setAxiom(true);
+                ((NonTermToken) s).setAxiom(true, epsilon);
             }
 
         //<T <P><P> *>*
@@ -116,5 +136,27 @@ public class Filler {
 
     public HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> getRules() {
         return rules;
+    }
+
+    public HashMap<Symbol, Integer> getTable() {
+        HashMap<Symbol, Integer> table = new HashMap<>();
+        int nonTermCount = 0;
+        for (NonTermToken t: rules.keySet()) {
+            table.put(t, nonTermCount++);
+        }
+
+        for (Symbol t: terminals.keySet()) {
+            table.put(t, terminals.get(t) + nonTermCount);
+        }
+
+        return table;
+    }
+
+    public HashMap<Symbol, Integer> getTerminals() {
+        return terminals;
+    }
+
+    public HashMap<NonTermToken, Integer> getNonterminals() {
+        return nonterminals;
     }
 }

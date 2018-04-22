@@ -22,12 +22,13 @@ public abstract class Symbol {
     }
 
     public static void printTree(Symbol symbol, int offset) {
-        System.out.println(symbol);
+        System.out.print("[" + symbol);
         for (Symbol s: symbol.symbols) {
             printMul(" ", offset);
             //System.out.println(symbol);
             printTree(s, offset + 1);
         }
+        System.out.println("]");
     }
 
     private static void printMul(String s, int offset) {
@@ -74,7 +75,6 @@ public abstract class Symbol {
         ArrayList<Token> add = new ArrayList<>();
 
         for (Token t: tokens) {
-            System.out.println(t);
             if (!follow.contains(t))
                 add.add(t);
         }
