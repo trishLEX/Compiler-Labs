@@ -1,10 +1,8 @@
-package ru.bmstu.CompilerLabs.Lab7;
+package ru.bmstu.CompilerLabs.Lab7.Parser;
 
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.NonTermToken;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.SymbolToken;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
 
 import java.util.ArrayList;
 import java.util.HashMap;

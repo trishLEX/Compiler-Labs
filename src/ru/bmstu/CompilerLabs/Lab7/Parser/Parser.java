@@ -1,7 +1,6 @@
 package ru.bmstu.CompilerLabs.Lab7.Parser;
 
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
-import ru.bmstu.CompilerLabs.Lab7.ParseTable;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;

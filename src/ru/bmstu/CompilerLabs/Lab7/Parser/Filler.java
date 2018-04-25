@@ -83,7 +83,7 @@ public class Filler {
             boolean isContained = false;
             TermToken terminal = null;
             if (s.getTag() == TokenTag.TERMINAL) {
-                for (Symbol t: terminals.keySet()) {   //TODO можно использовать keySet().contains()
+                for (Symbol t: terminals.keySet()) {
                     if (t.getTag() != TokenTag.EPSILON && ((TermToken) t).getValue().equals(s.getValue())) {
                         isContained = true;
                         terminal = (TermToken) t;
