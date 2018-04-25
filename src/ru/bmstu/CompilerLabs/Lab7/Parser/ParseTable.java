@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ParseTable {
-    ArrayList<Integer>[][] table;
-    HashMap<NonTermToken, Integer> nonTerminals;
-    HashMap<SymbolToken, Integer> terminals;
-    HashMap<SymbolToken, Integer> symbols;
-    HashMap<Integer, String> tags;
+    private ArrayList<Integer>[][] table;
+    private HashMap<NonTermToken, Integer> nonTerminals;
+    private HashMap<SymbolToken, Integer> terminals;
+    private HashMap<SymbolToken, Integer> symbols;
+    private HashMap<Integer, String> tags;
 
     public ParseTable(ArrayList<Integer>[][] table, HashMap<NonTermToken, Integer> nonTerminals,
                       HashMap<SymbolToken, Integer> terminals, HashMap<SymbolToken, Integer> symbols) {
