@@ -1,23 +1,22 @@
 // Синтаксическое описание
 <axiom <S>>
 <S      <AXIOM RULES>>
-<AXIOM  < \<axiom \<IDENTF\>\> >>
+<AXIOM  < \<\axiom \<nonterminal \>\> >>
 <RULES  <RULE RULES'>>
 <RULES' <RULE RULES'>
         <> >
-<RULE   < \<IDENTF PRODUCTS\> >>
+<RULE   < \<nonterminal PRODUCTS\> >>
 <PRODUCTS <PRODUCT PRODUCTS'>>
 <PRODUCTS' <PRODUCT PRODUCTS'>
            <> >
 <PRODUCT < \<SYMBOLS\> >>
 <SYMBOLS <SYMBOL SYMBOLS>
          <> >
-<SYMBOL <GENERAL_SYMBOL> <IDENTF> >
-<IDENTF <IDENT> <IDENT'> >
+<SYMBOL <terminal> <nonterminal> >
 
 // Лексическое описание
-GENERAL_SYMBOL ::= ANY_SYMBOL - {<,>,'} //lowercase
+terminal       ::= ANY_SYMBOL - {<,>,'} //lowercase
 IDENT          ::= LETTER | LETTERSLIST
 LETTERSLIST    ::= LETTER IDENT
-IDENTF         ::= IDENT' | IDENT // uppercase
+nonterminal    ::= IDENT' | IDENT // uppercase
 

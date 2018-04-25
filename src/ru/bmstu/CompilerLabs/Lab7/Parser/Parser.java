@@ -1,6 +1,7 @@
 package ru.bmstu.CompilerLabs.Lab7.Parser;
 
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
+import ru.bmstu.CompilerLabs.Lab7.ParseTable;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
@@ -74,6 +75,29 @@ public class Parser {
         this.filler = new Filler();
     }
 
+    private Symbol makeSymbol(int number) {
+        switch (number) {
+            case 0: return new SVar();
+            case 1: return new AxiomVar();
+            case 2: return new RulesVar();
+            case 3: return new Rules1Var();
+            case 4: return new RuleVar();
+            case 5: return new ProductsVar();
+            case 6: return new Products1Var();
+            case 7: return new ProductVar();
+            case 8: return new SymbolsVar();
+            case 9: return new SymbolVar();
+            case 10: return new LBracketToken();
+            case 11: return new RBracketToken();
+            case 12: return new KeywordToken();
+            case 13: return new NonTermToken();
+            case 14: return new TermToken();
+            case 15: return new EpsToken();
+            default:
+                throw new RuntimeException("Invalid number: " + number);
+        }
+    }
+
     private void parse() throws CloneNotSupportedException {
         Symbol X = stack.peek();
         if (tokenMap.containsKey(X.getTag())) {
@@ -118,7 +142,7 @@ public class Parser {
         } while (!stack.isEmpty());
 
         //Symbol.printTree(start, 0);
-        HashMap<Symbol, Integer> fillerTable = filler.getTable();
+        HashMap<SymbolToken, Integer> fillerTable = filler.getTable();
 
         selecter = new FFSelecter(filler.getRules());
 
@@ -170,28 +194,11 @@ public class Parser {
         }
 
         System.out.println(generatedTable);
-    }
-
-    private Symbol makeSymbol(int number) {
-        switch (number) {
-            case 0: return new SVar();
-            case 1: return new AxiomVar();
-            case 2: return new RulesVar();
-            case 3: return new Rules1Var();
-            case 4: return new RuleVar();
-            case 5: return new ProductsVar();
-            case 6: return new Products1Var();
-            case 7: return new ProductVar();
-            case 8: return new SymbolsVar();
-            case 9: return new SymbolVar();
-            case 10: return new LBracketToken();
-            case 11: return new RBracketToken();
-            case 12: return new KeywordToken();
-            case 13: return new NonTermToken();
-            case 14: return new TermToken();
-            case 15: return new EpsToken();
-            default:
-                throw new RuntimeException("Invalid number: " + number);
-        }
+        ParseTable t = new ParseTable(generatedTable, nonterms, terms, fillerTable);
+        t.printTagTable();
+        t.printTable();
+        t.printVarMap();
+        t.printTokenMap();
+        //t.printMakeSymbolFn();
     }
 }

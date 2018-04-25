@@ -138,14 +138,14 @@ public class Filler {
         return rules;
     }
 
-    public HashMap<Symbol, Integer> getTable() {
-        HashMap<Symbol, Integer> table = new HashMap<>();
+    public HashMap<SymbolToken, Integer> getTable() {
+        HashMap<SymbolToken, Integer> table = new HashMap<>();
         int nonTermCount = 0;
         for (NonTermToken t: rules.keySet()) {
             table.put(t, nonTermCount++);
         }
 
-        for (Symbol t: terminals.keySet()) {
+        for (SymbolToken t: terminals.keySet()) {
             table.put(t, terminals.get(t) + nonTermCount);
         }
 

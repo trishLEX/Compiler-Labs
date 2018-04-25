@@ -1,9 +1,14 @@
-<axiom <E>>
-<E    <T E'>>
-<E'   <+ T E'>
-      <>>
-<T    <F T'>>
-<T'   <* F T'>
-      <>>
-<F    <n>
-      <( E )>>
+<axiom <S>>
+<S      <AXIOM RULES>>
+<AXIOM  < \<\axiom \<nonterminal \>\> >>
+<RULES  <RULE RULES1>>
+<RULES1 <RULE RULES1>
+        <> >
+<RULE   < \<nonterminal PRODUCTS\> >>
+<PRODUCTS <PRODUCT PRODUCTS1>>
+<PRODUCTS1 <PRODUCT PRODUCTS1>
+           <> >
+<PRODUCT < \<SYMBOLS\> >>
+<SYMBOLS <SYMBOL SYMBOLS>
+         <> >
+<SYMBOL <terminal> <nonterminal> >

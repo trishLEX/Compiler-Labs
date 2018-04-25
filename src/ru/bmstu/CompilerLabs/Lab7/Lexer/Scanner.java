@@ -28,13 +28,13 @@ public class Scanner {
             switch (cur.getChar()) {
                 case '\\': {
                     Position start = (Position) cur.clone();
-                    String value = "\\";
+                    String value = "";
                     cur.nextCp();
                     if (cur.getChar() == '<' || cur.getChar() == '>') {
                         value += cur.getChar();
                         cur.nextCp();
                     } else {
-                        while (cur.getChar() != '\\' && !cur.isWhiteSpace()) {
+                        while (cur.getChar() != '\\' && !cur.isWhiteSpace() && cur.getChar() != '>' && cur.getChar() != '<') {
                             value += cur.getChar();
                             cur.nextCp();
                         }
@@ -77,13 +77,13 @@ public class Scanner {
                         }
                     }
 
-                    return getGenSymbol(cur, start, value);
+                    return getTerminal(cur, start, value);
                 }
                 default:
                     if (cur.isLetter() && cur.isUpperCase())
-                        return getIdent(cur);
+                        return getNonTerminal(cur);
                     else
-                        return getGenSymbol(cur);
+                        return getTerminal(cur);
 
 //                    if (cur.getChar() != (char) 0xFFFFFFFF)
 //                        messages.add(new Message(true, (Position) cur.clone(), "unexpected character"));
@@ -95,7 +95,7 @@ public class Scanner {
         return new EndOfProgram(cur, cur);
     }
 
-    private NonTermToken getIdent(Position cur) throws CloneNotSupportedException {
+    private NonTermToken getNonTerminal(Position cur) throws CloneNotSupportedException {
         String value = "";
         Position start = (Position) cur.clone();
 
@@ -127,7 +127,7 @@ public class Scanner {
         return new NonTermToken(value, start, (Position) cur.clone());
     }
 
-    private TermToken getGenSymbol(Position cur) throws CloneNotSupportedException {
+    private TermToken getTerminal(Position cur) throws CloneNotSupportedException {
         String value = "";
         Position start = (Position) cur.clone();
 
@@ -150,7 +150,7 @@ public class Scanner {
         return new TermToken(value, start, (Position) cur.clone());
     }
 
-    private TermToken getGenSymbol(Position cur, Position start, String value) throws CloneNotSupportedException {
+    private TermToken getTerminal(Position cur, Position start, String value) throws CloneNotSupportedException {
         while (cur.getChar() != (char) 0xFFFFFFFF
                 && !Character.isWhitespace(cur.getChar())
                 && cur.getChar() != '<'
