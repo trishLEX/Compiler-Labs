@@ -112,7 +112,12 @@ public class Parser {
                 filler.fill(s);
 
                 input.push(scanner.nextToken());
-            } else throw new RuntimeException(X.getTag() + " expected, got " + input.peek());
+            } else {
+                if (X.getTag() == TokenTag.KEYWORD)
+                    throw new RuntimeException("NO AXIOM");
+                else
+                    throw new RuntimeException(X.getTag() + " expected, got " + input.peek());
+            }
         } else {
             if (table[varMap.get(X.getTag())][tokenMap.get(input.peek().getTag())][0] != -1) {
                 Symbol s = stack.pop();
@@ -143,6 +148,10 @@ public class Parser {
 
         //Symbol.printTree(start, 0);
         HashMap<SymbolToken, Integer> fillerTable = filler.getTable();
+
+        for (SymbolToken t: filler.getRules().keySet())
+            if (filler.getRules().get(t).size() == 0)
+                throw new RuntimeException(t.getValue() + " is not defined");
 
         selecter = new FFSelecter(filler.getRules());
 
