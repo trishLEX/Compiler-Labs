@@ -1,7 +1,5 @@
 package ru.bmstu.CompilerLabs.Lab7.Parser;
 
-import ru.bmstu.CompilerLabs.Lab7.FFSelecter;
-import ru.bmstu.CompilerLabs.Lab7.Filler;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Scanner;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
@@ -42,7 +40,7 @@ public class Parser {
     private HashMap<SymbolType, Integer> tokenMap;
     private Filler filler;
     private FFSelecter selecter;
-    private ArrayList<Token> termsAndNonTerms = new ArrayList<Token>();
+    //private ArrayList<Token> termsAndNonTerms = new ArrayList<>();
     private ArrayList<Integer>[][] generatedTable;
 
     public Parser(String program) {
@@ -83,9 +81,9 @@ public class Parser {
                 Token s = (Token) stack.pop();
                 s.setToken(input.peek().getCoords(), input.peek().getValue());
 
-                if (s.getTag() == TokenTag.NONTERMINAL || s.getTag() == TokenTag.TERMINAL) {
-                    termsAndNonTerms.add(s);
-                }
+//                if (s.getTag() == TokenTag.NONTERMINAL || s.getTag() == TokenTag.TERMINAL) {
+//                    termsAndNonTerms.add(s);
+//                }
 
                 filler.fill(s);
 
@@ -134,7 +132,7 @@ public class Parser {
             System.out.println("stack is not empty");
 
         HashMap<NonTermToken, Integer> nonterms = filler.getNonterminals();
-        HashMap<Symbol, Integer> terms = filler.getTerminals();
+        HashMap<SymbolToken, Integer> terms = filler.getTerminals();
 
         generatedTable = new ArrayList[filler.getNonterminals().keySet().size()][filler.getTerminals().keySet().size()];
         for (int i = 0; i < filler.getNonterminals().keySet().size(); i++) {
@@ -146,8 +144,9 @@ public class Parser {
         }
 
         for (NonTermToken x: filler.getRules().keySet()) {
-            for (ArrayList<Symbol> u: filler.getRules().get(x)) {
-                for (Token a: u.get(0).getFirst()) {
+            for (ArrayList<SymbolToken> u: filler.getRules().get(x)) {
+                //ArrayList<SymbolToken> list = u.get(0).getFirst();
+                for (SymbolToken a: (ArrayList<SymbolToken>) u.get(0).getFirst()) {
                     Integer error = -1;
                     generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(a)].remove(error);
                     ArrayList<Integer> res = new ArrayList<>();
@@ -163,8 +162,6 @@ public class Parser {
                                     generatedTable[nonterms.get(x)][terms.get(b)].add(fillerTable.get(z));
                             }
 
-                            System.out.print("TERM: " + b + " ");
-                            System.out.println(terms.get(b));
                             generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(b)].remove(error);
                         }
                     }

@@ -1,4 +1,4 @@
-package ru.bmstu.CompilerLabs.Lab7;
+package ru.bmstu.CompilerLabs.Lab7.Parser;
 
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
@@ -16,15 +16,15 @@ public class Filler {
     private NonTermToken current;
     private int currentProdIndex = -1;
 
-    private HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules = new HashMap<>();
-    private HashMap<Symbol, Integer> terminals = new HashMap<>();
+    private HashMap<NonTermToken, ArrayList<ArrayList<SymbolToken>>> rules = new HashMap<>();
+    private HashMap<SymbolToken, Integer> terminals = new HashMap<>();
     private HashMap<NonTermToken, Integer> nonterminals = new HashMap<>();
     private EpsToken epsilon = new EpsToken();
     private int termCount = 0;
     private int nonTermCount = 0;
 
     public Filler() {
-        epsilon.addFirst(epsilon);
+        //epsilon.addFirst(epsilon);
         terminals.put(epsilon, termCount++);
     }
 
@@ -69,7 +69,7 @@ public class Filler {
 
         //<T <P*>*<P> >
         } else if (isFilling && s.getTag() == TokenTag.RBRACKET) {
-            ArrayList<Symbol> list = rules.get(current).get(currentProdIndex);
+            ArrayList<SymbolToken> list = rules.get(current).get(currentProdIndex);
             if (list.isEmpty())
                 list.add(epsilon);
 
@@ -78,7 +78,7 @@ public class Filler {
 
         //< T <*P*><P> >
         } else if (isFilling) {
-            ArrayList<ArrayList<Symbol>> productions = rules.get(current);
+            ArrayList<ArrayList<SymbolToken>> productions = rules.get(current);
 
             boolean isContained = false;
             TermToken terminal = null;
@@ -92,8 +92,8 @@ public class Filler {
                 }
 
                 if (!isContained) {
-                    terminals.put(s, termCount++);
-                    s.addFirst(s);
+                    terminals.put((TermToken) s, termCount++);
+                    //s.addFirst(s);
                 } else {
                     s = terminal;
                 }
@@ -112,7 +112,7 @@ public class Filler {
             if (isContained)
                 productions.get(currentProdIndex).add(token);
             else {
-                productions.get(currentProdIndex).add(s);
+                productions.get(currentProdIndex).add((SymbolToken) s);
 
                 if (s.getTag() == TokenTag.NONTERMINAL) {
                     rules.put((NonTermToken) s, new ArrayList<>());
@@ -134,7 +134,7 @@ public class Filler {
         }
     }
 
-    public HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> getRules() {
+    public HashMap<NonTermToken, ArrayList<ArrayList<SymbolToken>>> getRules() {
         return rules;
     }
 
@@ -152,7 +152,7 @@ public class Filler {
         return table;
     }
 
-    public HashMap<Symbol, Integer> getTerminals() {
+    public HashMap<SymbolToken, Integer> getTerminals() {
         return terminals;
     }
 

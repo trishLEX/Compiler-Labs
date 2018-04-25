@@ -1,7 +1,8 @@
-package ru.bmstu.CompilerLabs.Lab7;
+package ru.bmstu.CompilerLabs.Lab7.Parser;
 
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.NonTermToken;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.SymbolToken;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
 
@@ -9,30 +10,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FFSelecter {
-    private HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules;
+    private HashMap<NonTermToken, ArrayList<ArrayList<SymbolToken>>> rules;
 
-    public FFSelecter(HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules) {
+    public FFSelecter(HashMap<NonTermToken, ArrayList<ArrayList<SymbolToken>>> rules) {
         this.rules = rules;
     }
 
 
-    private ArrayList<Token> getFirst(Symbol s) {
-        ArrayList<Token> res = new ArrayList<>();
+    private ArrayList<SymbolToken> getFirst(SymbolToken s) {
+        ArrayList<SymbolToken> res = new ArrayList<>();
         if (s.getTag() == TokenTag.TERMINAL || s.getTag() == TokenTag.EPSILON) {
-            res.add((Token) s);
+            res.add(s);
             return res;
         } else {
-            for (ArrayList<Symbol> symbols: rules.get(s))
+            for (ArrayList<SymbolToken> symbols: rules.get(s))
                 res.addAll(getFirst(symbols.get(0)));
 
             return res;
         }
     }
 
-    public void selectFIRST(Symbol s) {
-        for (ArrayList<Symbol> symbols: rules.get(s)) {
+    public void selectFIRST(SymbolToken s) {
+        for (ArrayList<SymbolToken> symbols: rules.get(s)) {
             if (symbols.get(0).getTag() == TokenTag.TERMINAL) {
-                s.addFirst((Token)symbols.get(0));
+                s.addFirst(symbols.get(0));
             } else {
                 s.addFirstAll(getFirst(symbols.get(0)));
             }
@@ -41,10 +42,10 @@ public class FFSelecter {
 
     public void selectFOLLOW() {
         for (NonTermToken x: rules.keySet()) {
-            for (ArrayList<Symbol> rule: rules.get(x)) {
+            for (ArrayList<SymbolToken> rule: rules.get(x)) {
                 for (int i = 1; i < rule.size() - 1; i++) {
                     if (rule.get(i).getTag() == TokenTag.NONTERMINAL) {
-                        rule.get(i).addFollowAll(rule.get(i + 1).getFirstWithoutEps());
+                        ((NonTermToken) rule.get(i)).addFollowAll(((SymbolToken) rule.get(i + 1)).getFirstWithoutEps());
                     }
                 }
             }
@@ -55,15 +56,15 @@ public class FFSelecter {
         int count = getFollowCount();
         while (isChanged) {
             for (NonTermToken x: rules.keySet()) {
-                for (ArrayList<Symbol> rule: rules.get(x)) {
+                for (ArrayList<SymbolToken> rule: rules.get(x)) {
                     for (int i = 1; i < rule.size() - 1; i++) {
-                        if (rule.get(i).getTag() == TokenTag.NONTERMINAL && rule.get(i + 1).isEpsIn()) {
-                            rule.get(i).addFollowAll(x.getFollow());
+                        if (rule.get(i).getTag() == TokenTag.NONTERMINAL && ((SymbolToken)rule.get(i + 1)).isEpsIn()) {
+                            ((NonTermToken)rule.get(i)).addFollowAll(x.getFollow());
                         }
                     }
 
                     if (rule.get(rule.size() - 1).getTag() == TokenTag.NONTERMINAL) {
-                        rule.get(rule.size() - 1).addFollowAll(x.getFollow());
+                        ((NonTermToken)rule.get(rule.size() - 1)).addFollowAll(x.getFollow());
                     }
                 }
             }
