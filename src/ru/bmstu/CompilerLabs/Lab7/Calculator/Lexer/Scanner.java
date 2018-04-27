@@ -1,16 +1,18 @@
 package ru.bmstu.CompilerLabs.Lab7.Calculator.Lexer;
 
 import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Tokens.*;
+import ru.bmstu.CompilerLabs.Lab7.Lexer.AbstractScanner;
 import ru.bmstu.CompilerLabs.Lab7.Lexer.Message;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Position;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
 
 import java.util.ArrayList;
 
-public class Scanner {
+public class Scanner extends AbstractScanner{
     private Position cur;
     private ArrayList<Message> messages;
 
-    public Scanner(String program) {
+    public Scanner(String program)  {
         this.cur = new Position(program);
         this.messages = new ArrayList<>();
     }

@@ -4,6 +4,7 @@ import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.NonTermToken;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.SymbolToken;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.TokenTag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class ParseTable {
     private HashMap<SymbolToken, Integer> terminals;
     private HashMap<SymbolToken, Integer> symbols;
     private HashMap<Integer, String> tags;
-    private HashMap<Character, String> symbolToClass;
+    private HashMap<String, String> symbolToClass;
 
     public ParseTable(ArrayList<Integer>[][] table, HashMap<NonTermToken, Integer> nonTerminals,
                       HashMap<SymbolToken, Integer> terminals, HashMap<SymbolToken, Integer> symbols) {
@@ -34,6 +35,13 @@ public class ParseTable {
             else
                 tags.put(symbols.get(s), "ε");
         }
+
+        this.symbolToClass = new HashMap<>();
+        symbolToClass.put("*", "MulToken");
+        symbolToClass.put("n", "NumberToken");
+        symbolToClass.put("+", "AddToken");
+        symbolToClass.put("(", "LParenToken");
+        symbolToClass.put(")", "RParenToken");
     }
 
     public void printTable() {
@@ -70,14 +78,22 @@ public class ParseTable {
     public void printTokenMap() {
         System.out.println("this.tokenMap = new HashMap<>();");
         for (SymbolToken t: terminals.keySet()) {
-            System.out.println(String.format("tokenMap.put(TokenTag.%s, %d);", t.getValue(), terminals.get(t)));
+            if (t.getValue() != null)
+                System.out.println(String.format("tokenMap.put(TokenTag.%s, %d);", symbolToClass.get(t.getValue()), terminals.get(t)));
+            else
+                System.out.println(String.format("tokenMap.put(TokenTag.END_OF_PROGRAM, %d);", terminals.get(t)));
         }
     }
 
     public void printMakeSymbolFn() {
         System.out.println("private Symbol makeSymbol(int number) {\n   switch (number) {");
-        for (Symbol s: symbols.keySet()) {
-            System.out.println(String.format("      case %d: return new %s();", symbols.get(s), ((Token) s).getValue()));
+        for (SymbolToken s: symbols.keySet()) {
+            if (s.getValue() == null)
+                System.out.println(String.format("      case %d: return new EpsToken();", symbols.get(s)));
+            else if (s.getTag() == TokenTag.NONTERMINAL)
+                System.out.println(String.format("      case %d: return new %sVar();", symbols.get(s), s.getValue().toString().replace('\'', '1')));
+            else
+                System.out.println(String.format("      case %d: return new %s();", symbols.get(s), symbolToClass.get(s.getValue())));
         }
         System.out.println("    }");
         System.out.println("}");

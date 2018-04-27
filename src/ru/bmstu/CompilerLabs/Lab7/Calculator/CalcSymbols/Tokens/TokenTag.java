@@ -1,6 +1,6 @@
 package ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Tokens;
 
-import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.SymbolType;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
 
 public enum TokenTag implements SymbolType {
     ADD_TOKEN,
@@ -9,5 +9,10 @@ public enum TokenTag implements SymbolType {
     RPAREN,
     EPSILON,
     END_OF_PROGRAM,
-    NUMBER
+    NUMBER;
+
+    @Override
+    public boolean isTokenTag() {
+        return true;
+    }
 }

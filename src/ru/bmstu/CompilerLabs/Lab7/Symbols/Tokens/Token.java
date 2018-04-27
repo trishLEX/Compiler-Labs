@@ -3,23 +3,24 @@ package ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Fragment;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Position;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
 
 public abstract class Token<T> extends Symbol{
-    private TokenTag tag;
+    private SymbolType tag;
     private Fragment coords;
     private T value;
 
-    protected Token(TokenTag tag, Position start, Position follow, T value) {
+    protected Token(SymbolType tag, Position start, Position follow, T value) {
         this.tag = tag;
         this.coords = new Fragment(start, follow);
         this.value = value;
     }
 
-    protected Token(TokenTag tag) {
+    protected Token(SymbolType tag) {
         this.tag = tag;
     }
 
-    public TokenTag getTag() {
+    public SymbolType getTag() {
         return tag;
     }
 

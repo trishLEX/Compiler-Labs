@@ -1,6 +1,6 @@
 package ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Vars;
 
-import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Symbol;
+import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 
 import java.util.ArrayList;
 

@@ -5,7 +5,7 @@ import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
 
 import java.util.ArrayList;
 
-public class Scanner {
+public class Scanner extends AbstractScanner {
     private String program;
     private Position cur;
     private ArrayList<Message> messages;

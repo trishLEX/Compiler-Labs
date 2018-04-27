@@ -35,4 +35,8 @@ public abstract class Symbol {
     public SymbolType getTag() {
         return tag;
     }
+
+    public void setTag(SymbolType tag) {
+        this.tag = tag;
+    }
 }
