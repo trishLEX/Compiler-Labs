@@ -180,10 +180,14 @@ public class Parser {
                 //ArrayList<SymbolToken> list = u.get(0).getFirst();
                 for (SymbolToken a: (ArrayList<SymbolToken>) u.get(0).getFirst()) {
                     Integer error = -1;
-                    generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(a)].remove(error);
+                    generatedTable[nonterms.get(x)][terms.get(a)].remove(error);
                     ArrayList<Integer> res = new ArrayList<>();
                     for (Symbol y: u)
                         res.add(fillerTable.get(y));
+
+                    if (generatedTable[nonterms.get(x)][terms.get(a)].size() > 0
+                            && generatedTable[nonterms.get(x)][terms.get(a)].get(0) != -1)
+                        throw new RuntimeException("Not LL(1)");
 
                     generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(a)].addAll(res);
 
@@ -194,7 +198,7 @@ public class Parser {
                                     generatedTable[nonterms.get(x)][terms.get(b)].add(fillerTable.get(z));
                             }
 
-                            generatedTable[filler.getNonterminals().get(x)][filler.getTerminals().get(b)].remove(error);
+                            generatedTable[nonterms.get(x)][terms.get(b)].remove(error);
                         }
                     }
                 }
@@ -207,6 +211,6 @@ public class Parser {
         t.printTable();
         t.printVarMap();
         t.printTokenMap();
-        //t.printMakeSymbolFn();
+        t.printMakeSymbolFn();
     }
 }

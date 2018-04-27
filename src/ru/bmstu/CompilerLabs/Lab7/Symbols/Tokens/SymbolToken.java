@@ -18,8 +18,8 @@ public abstract class SymbolToken<T> extends Token<T>{
     }
 
     public void addFirst(SymbolToken symbol) {
-        if (first.contains(symbol))
-            throw new RuntimeException("Not LL(1)");
+//        if (first.contains(symbol))
+//            throw new RuntimeException("Not LL(1)");
 
         first.add(symbol);
     }

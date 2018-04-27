@@ -40,37 +40,6 @@ public class NonTermToken extends SymbolToken<String>{
         return this.isAxiom;
     }
 
-//    public void addFirst(SymbolToken symbol) {
-//        first.add(symbol);
-//    }
-//
-//    public void addFirstAll(ArrayList<SymbolToken> tokens) {
-//        first.addAll(tokens);
-//    }
-
-//    public ArrayList<SymbolToken> getFirst() {
-//        return first;
-//    }
-//
-//    public ArrayList<SymbolToken> getFirstWithoutEps() {
-//        ArrayList<SymbolToken> res = new ArrayList<>();
-//        for (SymbolToken s: first) {
-//            if (s.getTag() != TokenTag.EPSILON)
-//                res.add(s);
-//        }
-//
-//        return res;
-//    }
-//
-//    public boolean isEpsIn() {
-//        for (Symbol s: first) {
-//            if (s.getTag() == TokenTag.EPSILON)
-//                return true;
-//        }
-//
-//        return false;
-//    }
-
     public boolean addFollowAll(ArrayList<SymbolToken> tokens) {
         ArrayList<SymbolToken> add = new ArrayList<>();
 
