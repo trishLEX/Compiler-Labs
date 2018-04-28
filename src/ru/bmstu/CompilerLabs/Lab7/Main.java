@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
-    private static final String PATH = "C:\\Users\\alexe\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab7\\TestFile.txt";
+    private static final String PATH = "C:\\Users\\alexe\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab7\\TestFile2.txt";
 
     public static void main(String[] args) throws CloneNotSupportedException, IOException {
         String program = new String(Files.readAllBytes(Paths.get(PATH)));

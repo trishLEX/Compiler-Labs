@@ -78,22 +78,14 @@ public class ParseTable {
     public void printTokenMap() {
         System.out.println("this.tokenMap = new HashMap<>();");
         for (SymbolToken t: terminals.keySet()) {
-            if (t.getValue() != null)
-                System.out.println(String.format("tokenMap.put(TokenTag.%s, %d);", symbolToClass.get(t.getValue()), terminals.get(t)));
-            else
-                System.out.println(String.format("tokenMap.put(TokenTag.END_OF_PROGRAM, %d);", terminals.get(t)));
+                System.out.println(String.format("tokenMap.put(TokenTag.%s, %d);", t.getValue(), terminals.get(t)));
         }
     }
 
     public void printMakeSymbolFn() {
         System.out.println("private Symbol makeSymbol(int number) {\n   switch (number) {");
         for (SymbolToken s: symbols.keySet()) {
-            if (s.getValue() == null)
-                System.out.println(String.format("      case %d: return new EpsToken();", symbols.get(s)));
-            else if (s.getTag() == TokenTag.NONTERMINAL)
-                System.out.println(String.format("      case %d: return new %sVar();", symbols.get(s), s.getValue().toString().replace('\'', '1')));
-            else
-                System.out.println(String.format("      case %d: return new %s();", symbols.get(s), symbolToClass.get(s.getValue())));
+                System.out.println(String.format("      case %d: return new %s();", symbols.get(s), s.getValue()));
         }
         System.out.println("    }");
         System.out.println("}");
