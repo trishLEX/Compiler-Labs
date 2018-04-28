@@ -1,4 +1,4 @@
-package ru.bmstu.CompilerLabs.Lab7;
+package ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols;
 
 import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.CalcParser;
 import ru.bmstu.CompilerLabs.Lab7.Calculator.Lexer.Scanner;
