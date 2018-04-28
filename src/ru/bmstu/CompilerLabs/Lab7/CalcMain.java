@@ -1,14 +1,10 @@
 package ru.bmstu.CompilerLabs.Lab7;
 
-import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Tokens.*;
-import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Vars.*;
+import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.CalcParser;
 import ru.bmstu.CompilerLabs.Lab7.Calculator.Lexer.Scanner;
 import ru.bmstu.CompilerLabs.Lab7.Parser.Parser;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.Token;
-
-import java.util.HashMap;
 
 public class CalcMain {
     public static void main(String[] args) throws CloneNotSupportedException {

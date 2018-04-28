@@ -1,4 +1,4 @@
-package ru.bmstu.CompilerLabs.Lab7;
+package ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols;
 
 import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Tokens.*;
 import ru.bmstu.CompilerLabs.Lab7.Calculator.CalcSymbols.Tokens.EpsToken;
@@ -8,8 +8,6 @@ import ru.bmstu.CompilerLabs.Lab7.Lexer.AbstractScanner;
 import ru.bmstu.CompilerLabs.Lab7.Parser.Parser;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab7.Symbols.SymbolType;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Tokens.*;
-import ru.bmstu.CompilerLabs.Lab7.Symbols.Variables.*;
 
 import java.util.HashMap;
 
