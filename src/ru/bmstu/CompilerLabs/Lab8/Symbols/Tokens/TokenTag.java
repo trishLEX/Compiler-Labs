@@ -9,9 +9,14 @@ public enum TokenTag implements SymbolType {
     RBRACKET,
     LBRACE,
     RBRACE,
-    LPAREN,
-    RPAREN,
-    OPERATION,
+    //LPAREN,
+    //RPAREN,
+    //OPERATION,
     EPSILON,
-    END_OF_PROGRAM
+    END_OF_PROGRAM;
+
+    @Override
+    public boolean isTokenTag() {
+        return true;
+    }
 }

@@ -3,6 +3,7 @@ package ru.bmstu.CompilerLabs.Lab8.Lexer;
 import ru.bmstu.CompilerLabs.Lab8.Service.Position;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.Tokens.*;
 
+import javax.xml.stream.events.Characters;
 import java.util.ArrayList;
 
 public class Scanner {
@@ -39,23 +40,14 @@ public class Scanner {
                     cur.nextCp();
                     return new RBraceToken(start, (Position) cur.clone());
                 case '(':
-                    cur.nextCp();
-                    return new LParenToken(start, (Position) cur.clone());
                 case ')':
-                    cur.nextCp();
-                    return new RParenToken(start, (Position) cur.clone());
                 case '+':
-                    cur.nextCp();
-                    return new OpToken('+', start, (Position) cur.clone());
                 case '-':
-                    cur.nextCp();
-                    return new OpToken('-', start, (Position) cur.clone());
                 case '*':
-                    cur.nextCp();
-                    return new OpToken('*', start, (Position) cur.clone());
                 case '/':
+                    String value = Character.toString(cur.getChar());
                     cur.nextCp();
-                    return new OpToken('/', start, (Position) cur.clone());
+                    return new TermToken(value, start, (Position) cur.clone());
                 default:
                     if (cur.isLetter() && cur.isUpperCase())
                         return getNonTerminal();
@@ -97,7 +89,8 @@ public class Scanner {
                 && cur.getChar() != '+'
                 && cur.getChar() != '-'
                 && cur.getChar() != '*'
-                && cur.getChar() != '/')
+                && cur.getChar() != '/'
+                )
             messages.add(new Message(true, (Position) cur.clone(), "' ' expected"));
 
         return new NonTermToken(value, start, (Position) cur.clone());
@@ -109,17 +102,7 @@ public class Scanner {
 
         while (cur.getChar() != (char) 0xFFFFFFFF
                 && !Character.isWhitespace(cur.getChar())
-                && cur.getChar() != '<'
-                && cur.getChar() != '>'
-                && cur.getChar() != '\''
-                && cur.getChar() != '{'
-                && cur.getChar() != '}'
-                && cur.getChar() != '('
-                && cur.getChar() != ')'
-                && cur.getChar() != '+'
-                && cur.getChar() != '-'
-                && cur.getChar() != '*'
-                && cur.getChar() != '/'
+                && cur.isLowerCase()
                 ) {
             value += cur.getChar();
             cur.nextCp();
@@ -136,7 +119,8 @@ public class Scanner {
                 && cur.getChar() != '+'
                 && cur.getChar() != '-'
                 && cur.getChar() != '*'
-                && cur.getChar() != '/')
+                && cur.getChar() != '/'
+                )
 
             messages.add(new Message(true, (Position) cur.clone(), "' ' expected"));
 

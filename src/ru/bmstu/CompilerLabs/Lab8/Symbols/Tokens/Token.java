@@ -23,8 +23,13 @@ public abstract class Token<T> extends Symbol {
         this.value = value;
     }
 
+//    @Override
+//    public String toString() {
+//        return this.getTag() + " " + coords + ": " + value;
+//    }
+
     @Override
     public String toString() {
-        return this.getTag() + " " + coords + ": " + value;
+        return value.toString();
     }
 }
