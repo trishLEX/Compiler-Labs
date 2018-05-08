@@ -1,0 +1,20 @@
+//Синтаксическое описание
+S           ::= RULES
+RULES       ::= RULE RULES'
+RULES'      ::= RULE RULES' | .
+RULE        ::= <NONTERMINAL PRODUCTS>
+PRODUCTS    ::= PRODUCT PRODUCTS'
+PRODUCTS'   ::= PRODUCT PRODUCTS' | .
+PRODUCT     ::= <ENTITIES>
+ENTITIES    ::= ENTITY ENTITIES'
+ENTITIES'   ::= ENTITY ENTITIES' | .
+ENTITY      ::= SYMBOLS | ALTS
+SYMBOLS     ::= SYMBOL SYMBOLS | .
+SYMBOL      ::= NONTERMINAL | TERMINAL
+ALTS        ::= { PRODUCTS } ALTS | .
+
+//Лексическое описание
+TERMINAL    ::= ANY_SYMBOL \ { <, > ,' ,"{", "}" }  //lowercase
+NONTERMINAL ::= IDENT' | IDENT                      // uppercase
+IDENT       ::= LETTER | LETTERSLIST
+LETTERSLIST ::= LETTER IDENT
