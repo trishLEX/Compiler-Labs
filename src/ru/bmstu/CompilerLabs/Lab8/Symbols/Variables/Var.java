@@ -44,4 +44,21 @@ public abstract class Var extends Symbol{
         }
         System.out.println("]");
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
+
+        Var other = (Var) obj;
+        return this.getTag() == other.getTag();
+    }
+
+    @Override
+    public int hashCode() {
+        return getTag().hashCode();
+    }
 }

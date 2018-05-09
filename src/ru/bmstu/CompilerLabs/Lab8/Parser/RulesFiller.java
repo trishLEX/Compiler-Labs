@@ -2,8 +2,7 @@ package ru.bmstu.CompilerLabs.Lab8.Parser;
 
 import ru.bmstu.CompilerLabs.Lab8.Symbols.AltContainer;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.Symbol;
-import ru.bmstu.CompilerLabs.Lab8.Symbols.Tokens.EpsToken;
-import ru.bmstu.CompilerLabs.Lab8.Symbols.Tokens.NonTermToken;
+import ru.bmstu.CompilerLabs.Lab8.Symbols.Tokens.*;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.RepeatContainer;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.Variables.*;
 
@@ -12,10 +11,17 @@ import java.util.HashMap;
 
 public class RulesFiller {
     private HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules;
+    private ArrayList<NonTermToken> nonterminals;
+    private ArrayList<TermToken> terminals;
+    private ArrayList<Symbol> eps;
     private boolean isInFirstSymbols;
 
     public RulesFiller() {
         rules = new HashMap<>();
+        nonterminals = new ArrayList<>();
+        terminals = new ArrayList<>();
+        eps = new ArrayList<>();
+        eps.add(new EpsToken());
         isInFirstSymbols = true;
     }
 
@@ -40,7 +46,8 @@ public class RulesFiller {
 
         ArrayList<ArrayList<Symbol>> products = PRODUCTS((ProductsVar)rule.get(2));
 
-        rules.put(nt, products);
+        //rules.put(nt, products);
+        put(nt, products);
         isInFirstSymbols = true;
     }
 
@@ -48,6 +55,7 @@ public class RulesFiller {
         ArrayList<ArrayList<Symbol>> prods = new ArrayList<>();
         prods.add(PRODUCT((ProductVar) products.get(0)));
         prods.addAll(PRODUCTS1((Products1Var) products.get(1)));
+
         return prods;
     }
 
@@ -56,6 +64,7 @@ public class RulesFiller {
             ArrayList<ArrayList<Symbol>> prods = new ArrayList<>();
             prods.add(PRODUCT((ProductVar) products1.get(0)));
             prods.addAll(PRODUCTS1((Products1Var) products1.get(1)));
+
             return prods;
         } else
             return new ArrayList<>();
@@ -69,6 +78,7 @@ public class RulesFiller {
         ArrayList<Symbol> symbols = new ArrayList<>();
         symbols.addAll(ENTITY((EntityVar) entities.get(0)));
         symbols.addAll(ENTITIES1((Entities1Var) entities.get(1)));
+
         return symbols;
     }
 
@@ -77,6 +87,7 @@ public class RulesFiller {
             ArrayList<Symbol> symbols = new ArrayList<>();
             symbols.addAll(ENTITY((EntityVar) entities1.get(0)));
             symbols.addAll(ENTITIES1((Entities1Var) entities1.get(1)));
+
             return symbols;
         } else
             return new ArrayList<>();
@@ -97,6 +108,7 @@ public class RulesFiller {
             ArrayList<Symbol> altsArray = new ArrayList<>();
             altsArray.add(ALT((AltVar) alts.get(0)));
             altsArray.addAll(ALTS((AltsVar) alts.get(1)));
+
             return altsArray;
         } else {
             return new ArrayList<>();
@@ -106,6 +118,7 @@ public class RulesFiller {
     private AltContainer ALT(AltVar alt) {
         AltContainer container = new AltContainer();
         container.addAllElements(PRODUCTS((ProductsVar) alt.get(1)));
+
         return container;
     }
 
@@ -114,6 +127,7 @@ public class RulesFiller {
             ArrayList<Symbol> repeatsArray = new ArrayList<>();
             repeatsArray.add(REPEAT((RepeatVar) repeats.get(0)));
             repeatsArray.addAll(REPEATS((RepeatsVar) repeats.get(1)));
+
             return repeatsArray;
         } else {
             return new ArrayList<>();
@@ -123,6 +137,7 @@ public class RulesFiller {
     private RepeatContainer REPEAT(RepeatVar repeat) {
         RepeatContainer container = new RepeatContainer();
         container.addAllElements(REPEATSYMBOLS((RepeatSymbolsVar) repeat.get(1)));
+
         return container;
     }
 
@@ -131,6 +146,7 @@ public class RulesFiller {
             ArrayList<ArrayList<Symbol>> repeatSymbolsArray = new ArrayList<>();
             repeatSymbolsArray.add(REPEATSYMBOL((RepeatSymbolVar) repeatSymbols.get(0)));
             repeatSymbolsArray.addAll(REPEATSYMBOLS((RepeatSymbolsVar) repeatSymbols.get(1)));
+
             return repeatSymbolsArray;
         } else
             return new ArrayList<>();
@@ -143,24 +159,64 @@ public class RulesFiller {
     private ArrayList<Symbol> SYMBOLS(SymbolsVar symbols) {
         if (symbols.getSymbols().size() > 0) {
             ArrayList<Symbol> symbolsArray = new ArrayList<>();
+
             isInFirstSymbols = false;
+
             symbolsArray.add(SYMBOL((SymbolVar) symbols.get(0)));
             symbolsArray.addAll(SYMBOLS((SymbolsVar) symbols.get(1)));
+
             return symbolsArray;
         } else {
             if (isInFirstSymbols) {
-                ArrayList<Symbol> eps = new ArrayList<>();
-                eps.add(new EpsToken());
                 isInFirstSymbols = false;
+
                 return eps;
             } else {
                 isInFirstSymbols = false;
+
                 return new ArrayList<>();
             }
         }
     }
 
     private Symbol SYMBOL(SymbolVar symbol) {
-        return symbol.get(0);
+        if (symbol.get(0).getTag() == TokenTag.TERMINAL) {
+            TermToken term = (TermToken) symbol.get(0);
+            int index = terminals.indexOf(term);
+
+            if (index == -1) {
+                terminals.add(term);
+                return term;
+            } else {
+                return terminals.get(index);
+            }
+        } else {
+            NonTermToken nonterm = (NonTermToken) symbol.get(0);
+            int index = nonterminals.indexOf(nonterm);
+
+            if (index == -1) {
+                nonterminals.add(nonterm);
+                rules.put(nonterm, new ArrayList<>());
+
+                return nonterm;
+            } else {
+                return nonterminals.get(index);
+            }
+        }
+    }
+
+    private void put(NonTermToken nt, ArrayList<ArrayList<Symbol>> products) {
+        int index = nonterminals.indexOf(nt);
+
+        if (index == -1) {
+            nonterminals.add(nt);
+            rules.put(nt, products);
+        } else {
+            rules.get(nonterminals.get(index)).addAll(products);
+        }
+    }
+
+    public HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> getRules() {
+        return rules;
     }
 }

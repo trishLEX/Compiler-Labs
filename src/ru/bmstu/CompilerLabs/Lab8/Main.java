@@ -1,10 +1,10 @@
 package ru.bmstu.CompilerLabs.Lab8;
 
+import ru.bmstu.CompilerLabs.Lab8.Parser.FirstSelector;
 import ru.bmstu.CompilerLabs.Lab8.Parser.Parser;
 import ru.bmstu.CompilerLabs.Lab8.Parser.RulesFiller;
 import ru.bmstu.CompilerLabs.Lab8.Lexer.Scanner;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.Variables.SVar;
-import ru.bmstu.CompilerLabs.Lab8.Symbols.Variables.Var;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,10 +38,12 @@ public class Main {
         SVar start = parser.parse();
 
         RulesFiller filler = new RulesFiller();
-        //filler.makeRules((Var) start.getSymbols().get(0));
         filler.makeRules1(start);
 
 //        Var.printTree(start);
+        FirstSelector selector = new FirstSelector(filler.getRules());
+        selector.selectFirst();
+        selector.printFirst();
 
         System.out.println("GOOD");
     }

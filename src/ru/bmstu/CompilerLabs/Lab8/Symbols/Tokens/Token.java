@@ -32,4 +32,21 @@ public abstract class Token<T> extends Symbol {
     public String toString() {
         return value.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
+
+        Token other = (Token) obj;
+        return this.getTag() == other.getTag() && this.value.equals(other.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return getTag().hashCode() + value.hashCode();
+    }
 }
