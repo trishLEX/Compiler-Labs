@@ -21,7 +21,8 @@ public enum VarTag implements SymbolType {
     REPEATS,
     REPEATSYMBOLS,
     REPEATSYMBOL,
-    CONTAINER;
+    REPEATCONTAINER,
+    ALTCONTAINER;
 
     @Override
     public boolean isTokenTag() {

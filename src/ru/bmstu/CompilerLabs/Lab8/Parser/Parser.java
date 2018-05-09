@@ -8,7 +8,7 @@ import ru.bmstu.CompilerLabs.Lab8.Symbols.Tokens.Token;
 
 public class Parser {
     private Scanner scanner;
-    private Var start;
+    private SVar start;
     private Token sym;
 
     public Parser(Scanner scanner) {
@@ -16,14 +16,14 @@ public class Parser {
         this.start = new SVar();
     }
 
-    public Var parse() throws CloneNotSupportedException {
+    public SVar parse() throws CloneNotSupportedException {
         sym = scanner.nextToken();
         parseS(start);
         return start;
     }
 
     //S           ::= RULES
-    private void parseS(Var s) throws CloneNotSupportedException {
+    private void parseS(SVar s) throws CloneNotSupportedException {
         RulesVar rules = new RulesVar();
         s.addSymbol(rules);
         parseRules(rules);
