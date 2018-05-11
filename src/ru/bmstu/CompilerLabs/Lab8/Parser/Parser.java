@@ -46,7 +46,7 @@ public class Parser {
         } while (sym.getTag() == TokenTag.LBRACKET);
     }
 
-    //RULE          ::= <NONTERMINAL ALT>
+    //RULE          ::= <NONTERMINAL PRODUCT+>
     private void parseRule(RuleVar rule) throws CloneNotSupportedException {
         rule.addSymbol(sym);
         parse(TokenTag.LBRACKET);
@@ -54,9 +54,11 @@ public class Parser {
         rule.addSymbol(sym);
         parse(TokenTag.NONTERMINAL);
 
-        AltVar alt = new AltVar();
-        rule.addSymbol(alt);
-        parseAlt(alt);
+        do {
+            ProductVar product = new ProductVar();
+            rule.addSymbol(product);
+            parseProduct(product);
+        } while (sym.getTag() == TokenTag.LBRACKET);
 
         rule.addSymbol(sym);
         parse(TokenTag.RBRACKET);
@@ -80,7 +82,7 @@ public class Parser {
         parse(TokenTag.RBRACKET);
     }
 
-    //ENTITY        ::= SYMBOL | <ALT> | REPEAT
+    //ENTITY        ::= SYMBOL | <PRODUCT+> | { ENTITY+ }
     private void parseEntity(EntityVar entity) throws CloneNotSupportedException {
         if (sym.getTag() == TokenTag.TERMINAL || sym.getTag() == TokenTag.NONTERMINAL) {
             SymbolVar symbol = new SymbolVar();
@@ -90,16 +92,29 @@ public class Parser {
             entity.addSymbol(sym);
             parse(TokenTag.LBRACKET);
 
-            AltVar alt = new AltVar();
-            entity.addSymbol(alt);
-            parseAlt(alt);
+            do {
+                ProductVar product = new ProductVar();
+                entity.addSymbol(product);
+                parseProduct(product);
+            } while (sym.getTag() == TokenTag.LBRACKET);
 
             entity.addSymbol(sym);
             parse(TokenTag.RBRACKET);
         } else {
-            RepeatVar repeat = new RepeatVar();
-            entity.addSymbol(repeat);
-            parseRepeat(repeat);
+            entity.addSymbol(sym);
+            parse(TokenTag.LBRACE);
+
+            do {
+                EntityVar entity1 = new EntityVar();
+                entity.addSymbol(entity1);
+                parseEntity(entity1);
+            } while (sym.getTag() == TokenTag.TERMINAL
+                    || sym.getTag() == TokenTag.NONTERMINAL
+                    || sym.getTag() == TokenTag.LBRACKET
+                    || sym.getTag() == TokenTag.LBRACE);
+
+            entity.addSymbol(sym);
+            parse(TokenTag.RBRACE);
         }
     }
 
@@ -111,44 +126,6 @@ public class Parser {
         } else {
             symbol.addSymbol(sym);
             parse(TokenTag.NONTERMINAL);
-        }
-    }
-
-    //ALT           ::= PRODUCT+
-    private void parseAlt(AltVar alt) throws CloneNotSupportedException {
-        do {
-            ProductVar product = new ProductVar();
-            alt.addSymbol(product);
-            parseProduct(product);
-        } while (sym.getTag() == TokenTag.LBRACKET);
-    }
-
-    //REPEAT        ::= { ENTITY+ }
-    private void parseRepeat(RepeatVar repeat) throws CloneNotSupportedException {
-        repeat.addSymbol(sym);
-        parse(TokenTag.LBRACE);
-
-        do {
-            EntityVar entity = new EntityVar();
-            repeat.addSymbol(entity);
-            parseEntity(entity);
-        } while (sym.getTag() == TokenTag.TERMINAL
-                || sym.getTag() == TokenTag.NONTERMINAL
-                || sym.getTag() == TokenTag.LBRACKET
-                || sym.getTag() == TokenTag.LBRACE);
-
-        repeat.addSymbol(sym);
-        parse(TokenTag.RBRACE);
-    }
-
-    private void put(NonTermToken nt, ArrayList<ArrayList<Symbol>> products) {
-        int index = nonterminals.indexOf(nt);
-
-        if (index == -1) {
-            nonterminals.add(nt);
-            rules.put(nt, products);
-        } else {
-            rules.get(nonterminals.get(index)).addAll(products);
         }
     }
 

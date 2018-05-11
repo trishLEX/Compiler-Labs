@@ -1,11 +1,9 @@
 //Синтаксическое описание
 S             ::= RULE+
-RULE          ::= <NONTERMINAL ALT>
-ALT           ::= PRODUCT+
+RULE          ::= <NONTERMINAL PRODUCT+>
 PRODUCT       ::= <ENTITY+>
-ENTITY        ::= SYMBOL | <ALT> | REPEAT
+ENTITY        ::= SYMBOL | <PRODUCT+> | { ENTITY+ }
 SYMBOL        ::= NONTERMINAL | TERMINAL
-REPEAT        ::= { ENTITY+ }
 
 
 //Лексическое описание

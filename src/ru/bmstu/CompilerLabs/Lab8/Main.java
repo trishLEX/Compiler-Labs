@@ -5,13 +5,14 @@ import ru.bmstu.CompilerLabs.Lab8.Parser.Parser;
 import ru.bmstu.CompilerLabs.Lab8.Parser.RulesFiller;
 import ru.bmstu.CompilerLabs.Lab8.Lexer.Scanner;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.Variables.SVar;
+import ru.bmstu.CompilerLabs.Lab8.Symbols.Variables.Var;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Main {
-    private static final String PATH = "E:\\Sorry\\Documents\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab8\\TestFile.txt";
+    private static final String PATH = "C:\\Users\\alexe\\IdeaProjects\\CompilerLabs\\src\\ru\\bmstu\\CompilerLabs\\Lab8\\TestFile.txt";
 
     public static void main(String[] args) throws IOException, CloneNotSupportedException {
         String program = new String(Files.readAllBytes(Paths.get(PATH)));
@@ -36,6 +37,7 @@ public class Main {
 
         Parser parser = new Parser(new Scanner(program));
         SVar start = parser.parse();
+//        Var.printTree(start);
 
         RulesFiller filler = new RulesFiller();
         filler.makeRules1(start);

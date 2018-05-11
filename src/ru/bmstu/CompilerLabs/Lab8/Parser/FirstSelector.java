@@ -29,7 +29,7 @@ public class FirstSelector {
                         nt.addFirstAll(getFirst(alt.get(0)));
                 } else if (product.get(0).getTag() == VarTag.REPEATCONTAINER) {
                     nt.addFirst(new EpsToken()); //check
-                    nt.addFirstAll(getFirst(((RepeatContainer) product.get(0)).getElements().get(0).get(0)));
+                    nt.addFirstAll(getFirst(((RepeatContainer) product.get(0)).getElements().get(0)));
                 } else
                     nt.addFirstAll(getFirst(product.get(0)));
             }
@@ -48,7 +48,7 @@ public class FirstSelector {
             return res;
         } else if (s.getTag() == VarTag.REPEATCONTAINER) {
             res.add(new EpsToken());
-            res.addAll(getFirst(((RepeatContainer) s).getElements().get(0).get(0)));
+            res.addAll(getFirst(((RepeatContainer) s).getElements().get(0)));
 
             return res;
         } else {
