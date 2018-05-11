@@ -13,22 +13,10 @@ public class Parser {
     private SVar start;
     private Token sym;
 
-    private HashMap<NonTermToken, ArrayList<ArrayList<Symbol>>> rules;
-    private ArrayList<NonTermToken> nonterminals;
-    private ArrayList<TermToken> terminals;
-    private ArrayList<Symbol> eps;
-    private boolean isInFirstSymbols;
 
     public Parser(Scanner scanner) {
         this.scanner = scanner;
         this.start = new SVar();
-
-        rules = new HashMap<>();
-        nonterminals = new ArrayList<>();
-        terminals = new ArrayList<>();
-        eps = new ArrayList<>();
-        eps.add(new EpsToken());
-        isInFirstSymbols = true;
     }
 
     public SVar parse() throws CloneNotSupportedException {

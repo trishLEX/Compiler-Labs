@@ -29,7 +29,7 @@ public abstract class SymbolToken<T> extends Token<T> {
 
     public void addFirstAll(ArrayList<Symbol> tokens) {
         for (Symbol s: tokens)
-            if (first.contains(s) && s.getTag() == TokenTag.EPSILON)
+            if ((first.contains(s) || (tokens.size() > 1) ) && s.getTag() == TokenTag.EPSILON)
                 tokens.remove(s);
 
         first.addAll(tokens);
