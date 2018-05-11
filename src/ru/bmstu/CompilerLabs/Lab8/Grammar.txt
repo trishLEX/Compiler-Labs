@@ -1,22 +1,12 @@
 //Синтаксическое описание
-S             ::= RULES
-RULES         ::= RULE RULES'
-RULES'        ::= RULE RULES' | .
-RULE          ::= <NONTERMINAL PRODUCTS>
-PRODUCTS      ::= PRODUCT PRODUCTS'
-PRODUCTS'     ::= PRODUCT PRODUCTS' | .
-PRODUCT       ::= <ENTITIES>
-ENTITIES      ::= ENTITY ENTITIES'
-ENTITIES'     ::= ENTITY ENTITIES' | .
-ENTITY        ::= SYMBOLS | ALTS | REPEATS
-ALTS          ::= ALT ALTS | .
-ALT           ::= <PRODUCTS>
-REPEATS       ::= REPEAT REPEATS | .
-REPEAT        ::= { REPEATSYMBOLS }
-REPEATSYMBOLS ::= REPEATSYMBOL REPEATSYMBOLS | .
-REPEATSYMBOL  ::= ENTITY
-SYMBOLS       ::= SYMBOL SYMBOLS | .
+S             ::= RULE+
+RULE          ::= <NONTERMINAL ALT>
+ALT           ::= PRODUCT+
+PRODUCT       ::= <ENTITY+>
+ENTITY        ::= SYMBOL | <ALT> | REPEAT
 SYMBOL        ::= NONTERMINAL | TERMINAL
+REPEAT        ::= { ENTITY+ }
+
 
 //Лексическое описание
 TERMINAL    ::= ANY_SYMBOL \ { <, > ,' ,"{", "}" }  //lowercase
