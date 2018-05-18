@@ -1,0 +1,5 @@
+var x: integer; r : record  	a: real; re : array [1..2] of record		b : string; a : real; c : record z : integer; bk : array [1..3] of record z : integer;
+ko : record a : real; end; end; end;
+end;c : string; ar : array [1..2] of record a: array [3..4] of array [1..3] of record c:integer; end; end;
+end;
+ 
