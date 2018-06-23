@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class RepeatContainer extends Var implements Cloneable {
     private ArrayList<Symbol> elements;
-    //private ArrayList<ArrayList<Symbol>> elements;
 
     public RepeatContainer() {
         super(VarTag.REPEATCONTAINER);
@@ -20,10 +19,6 @@ public class RepeatContainer extends Var implements Cloneable {
 
     public void addElement(Symbol e) {
         elements.add(e);
-    }
-
-    public void addAllElements(ArrayList<Symbol> es) {
-        elements.addAll(es);
     }
 
     @Override

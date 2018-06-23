@@ -6,7 +6,6 @@ import ru.bmstu.CompilerLabs.Lab8.Symbols.Variables.VarTag;
 import java.util.ArrayList;
 
 public class AltContainer extends Var implements Cloneable {
-    //private ArrayList<Symbol> elements;
     private ArrayList<ArrayList<Symbol>> elements;
 
     public AltContainer() {
@@ -20,10 +19,6 @@ public class AltContainer extends Var implements Cloneable {
 
     public void addElement(ArrayList<Symbol> e) {
         elements.add(e);
-    }
-
-    public void addAllElements(ArrayList<ArrayList<Symbol>> es) {
-        elements.addAll(es);
     }
 
     @Override

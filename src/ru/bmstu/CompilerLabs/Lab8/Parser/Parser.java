@@ -1,12 +1,8 @@
 package ru.bmstu.CompilerLabs.Lab8.Parser;
 
-import ru.bmstu.CompilerLabs.Lab8.Symbols.Symbol;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.Tokens.*;
 import ru.bmstu.CompilerLabs.Lab8.Symbols.Variables.*;
 import ru.bmstu.CompilerLabs.Lab8.Lexer.Scanner;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Parser {
     private Scanner scanner;

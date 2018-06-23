@@ -73,11 +73,6 @@ public class Scanner {
             cur.nextCp();
         }
 
-//        if (cur.getChar() == '\'') {
-//            value += cur.getChar();
-//            cur.nextCp();
-//        }
-
         if (cur.getChar() != (char) 0xFFFFFFFF
                 && !Character.isWhitespace(cur.getChar())
                 && cur.getChar() != '>'

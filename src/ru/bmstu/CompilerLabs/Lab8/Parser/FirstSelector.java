@@ -23,14 +23,13 @@ public class FirstSelector {
                     nt.addFirst(product.get(0));
                 else if (product.get(0).getTag() == TokenTag.EPSILON) {
                     nt.addFirst(product.get(0));
-                    //nt.addFirstAll(getFirst(product.get(1)));
                 } else if (product.get(0).getTag() == VarTag.ALTCONTAINER) {
                     for (ArrayList<Symbol> alt: ((AltContainer) product.get(0)).getElements())
                         nt.addFirstAll(getFirst(alt.get(0)));
                 } else if (product.get(0).getTag() == VarTag.REPEATCONTAINER) {
                     nt.addFirstAll(getFirst(((RepeatContainer) product.get(0)).getElements().get(0)));
                     if (product.size() == 1)
-                        nt.addFirst(new EpsToken()); //check
+                        nt.addFirst(new EpsToken());
                     else
                         nt.addFirstAll(getFirst(product.get(1)));
                 } else {
